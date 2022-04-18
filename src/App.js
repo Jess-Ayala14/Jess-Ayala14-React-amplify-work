@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navebar from './components/Navebar';
 import Welcome from './components/Welcome';
 import Signup from './components/Signup';
-import Home from './components/Auth/Home/Home';
 import About from './components/About';
 import Settings from './components/Auth/Settings/Settings';
 import 'bootstrap/dist/css/bootstrap.min.css';

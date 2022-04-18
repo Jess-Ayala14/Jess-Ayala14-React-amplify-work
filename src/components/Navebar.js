@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import './Navebar.css'
 import { AmplifySignOut } from '@aws-amplify/ui-react'
 import { Auth } from 'aws-amplify';
 import { Navbar, Container, Nav, NavDropdown }
     from 'react-bootstrap';
-
+import './Navebar.css'
 
 export default class Navebar extends Component {
     handleLogOut = async event => {
@@ -37,12 +36,12 @@ export default class Navebar extends Component {
                         )}
                         {this.props.auth.isAuthenticated && (
                             <Nav className="me-auto">
-                                <Navbar.Text className='navbar-item'>
+                                <Navbar.Brand href="/Signup">
                                     {this.props.auth.isAuthenticated && this.props.auth.user && (
-                                        <>Hello {this.props.auth.user.username}</>
+                                        <h6 className='user_welcoming'>welcome {this.props.auth.user.username}</h6>
 
                                     )}
-                                </Navbar.Text>
+                                </Navbar.Brand>
                             </Nav>
                         )}
                     </Navbar.Collapse>
@@ -52,7 +51,7 @@ export default class Navebar extends Component {
                                 <Nav.Link href="/Signup">Signup</Nav.Link>
                             )}
                             {this.props.auth.isAuthenticated && (
-                                <NavDropdown title={"Options"}
+                                <NavDropdown title="Options"
                                     id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/Settings">Settings</NavDropdown.Item>
                                     <NavDropdown.Divider />

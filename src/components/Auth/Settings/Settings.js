@@ -1,23 +1,25 @@
-import React from 'react'
-import { useEffect, useState, Component } from 'react'
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
-import { Container, Row, Col, Tab, Button, Nav }
+import { React, Component } from 'react'
+import Bussiness from './Partials/bussiness-pane';
+import Profile from './Partials/profile-pane';
+import Socialn from './Partials/socialn-pane';
+import { withAuthenticator } from '@aws-amplify/ui-react'
+import { Container, Row, Col, Tab, Nav }
   from 'react-bootstrap';
 import './Settings.css';
-import { render } from '@testing-library/react';
+
 
 
 class Settings extends Component {
   render() {
     return (
       <div className='settings'>
-        <Container fluid>
+        <Container>
           <br />
           <Row>
-            <Col></Col>
-            <Col><h2>Settings</h2></Col>
-            <Col></Col>
+            <Col md='3 text-left'><h2>Settings</h2></Col>
+            <Col m="3"></Col>
           </Row>
+          <br/>
           <Row>
             <Col>
               <Tab.Container id="left-tabs-example" defaultActiveKey="bussiness">
@@ -38,33 +40,9 @@ class Settings extends Component {
                   <Col className="settings-col-tab" sm={9}>
                     <div className='settings-content'>
                       <Tab.Content>
-                        <Tab.Pane eventKey="bussiness">
-                          <Container>
-                            <Row>
-                              <Col sm={8}>
-                                <p>Bussiness</p>
-                              </Col>
-                            </Row>
-                          </Container>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="User">
-                          <Container>
-                            <Row>
-                              <Col sm={8}>
-                                <p>User Info</p>
-                              </Col>
-                            </Row>
-                          </Container>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="Social">
-                          <Container>
-                            <Row>
-                              <Col sm={8}>
-                                <p>Social Network</p>
-                              </Col>
-                            </Row>
-                          </Container>
-                        </Tab.Pane>
+                        <Bussiness />
+                        <Profile />
+                        <Socialn />
                       </Tab.Content>
                     </div>
                   </Col>
