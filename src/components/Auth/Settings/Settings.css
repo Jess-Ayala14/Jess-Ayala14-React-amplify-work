@@ -1,0 +1,39 @@
+p {
+    text-transform: capitalize;
+}
+
+div.settings{
+    height: 100vh;
+    background-color: azure;
+}
+
+
+
+.settings .nav-item a.nav-link  {
+    color: #0d6efd;
+    background-color: white;
+    border-radius: 3px;
+    border-color: #0d6efd;
+    border-style: ridge;
+
+}
+
+.settings .nav-item a.nav-link.active  {
+    color: white;
+    background-color: #5f9af1;
+
+}
+
+.settings-col-tab .settings-content{ 
+    height: 25vh;
+    background-color: #f6f8faef;
+    border-radius: 5px;
+    border-color: #85b2f5;
+    border-style: ridge;
+}
+
+.settings .nav-pills .nav-link{
+    border: 1px;
+    margin: 2px;
+}
+
