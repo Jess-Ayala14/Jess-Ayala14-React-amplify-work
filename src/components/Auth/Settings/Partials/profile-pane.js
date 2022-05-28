@@ -9,6 +9,8 @@ import { Container, Row, Col, ListGroup, Tab, Form, Button }
 const Profile = () => {
     const [hideLightbox, setHideLightbox] = useState(true);
     const [hideLightbox1, setHideLightbox1] = useState(true);
+    const [name, setName] = useState("");
+    const [lastname, setName1] = useState("");
     let [state, setState] = useState(null)
 
     useEffect(() => {
@@ -30,6 +32,19 @@ const Profile = () => {
         return (data)
     }
 
+    async function handleSubmit (event) {
+         
+                event.preventDefault();
+                let user = await Auth.currentAuthenticatedUser();
+
+                let result = await Auth.updateUserAttributes(user, {
+                    'given_name': name,
+                    'family_name': lastname
+                });
+                
+                console.log(result);
+            
+    }
 
     if (!state) return <AmplifyLoadingSpinner />
     return (
@@ -38,19 +53,24 @@ const Profile = () => {
                 <div className='profile-list'>
                     <ListGroup>
                         <ListGroup.Item>
-                            <Form >
+                            <Form onSubmit={handleSubmit}>
                                 <div>
                                     <Row className="justify-content-md-center">
-                                        <Col md="3 text-left">Username</Col>
-                                        <Col md="6 text-center"><p>{format(JSON.stringify(state["username"]))}</p></Col>
+                                        <Col md="3 text-left"><b>Username</b> <p>{format(JSON.stringify(state["username"]))}</p></Col>
+                                        <Col md="6 text-center"><b>Given Name</b>
+                                                                <p>{format(JSON.stringify(state["attributes"]["given_name"]))}{" "}
+                                                                   {format(JSON.stringify(state["attributes"]["family_name"]))} 
+                                                                </p></Col>
                                         <Col md="2 text-right"><a href="#User" onClick={() => setHideLightbox(false)}>Edit</a></Col>
                                     </Row>
                                 </div>
                                 <div className={`${hideLightbox ? "hide-lightbox" : "ligthbox"}`}>
                                     <Row className="justify-content-md-center username-edit">
                                         <Col md="6 text-left">
-                                            <Form.Label><h5>Edit Username</h5></Form.Label>
-                                            <Form.Control type="text" name="username"  id="username" placeholder={"current: " + format(JSON.stringify(state["username"]))} defaultValue="" />
+                                            <Form.Label><h5>Edit Name</h5></Form.Label>
+                                            <Form.Control type="text" value={name} name="name" id="name" placeholder={"current: " + format(JSON.stringify(state["attributes"]["given_name"]))} defaultValue="" onChange={(e) => setName(e.target.value)} />
+                                            <br />
+                                            <Form.Control type="text" value={lastname} name="lastname" id="lastname" placeholder={"current: " + format(JSON.stringify(state["attributes"]["family_name"]))} defaultValue="" onChange={(e) => setName1(e.target.value)} />
                                             <br />
                                             <Button variant="light" type="submit">Submit</Button>
                                             <Button variant="dark" onClick={() => setHideLightbox(true)}>Close</Button>{' '}
@@ -85,7 +105,7 @@ const Profile = () => {
                             <Row className="justify-content-md-center">
                                 <Col md="3 text-left">Password</Col>
                                 <Col md="6 text-center">***********</Col>
-                                <Col md="2 text-right"><a href="#User">Edit</a></Col>
+                                <Col md="2 text-right"><a href="">Edit</a></Col>
                             </Row>
                         </ListGroup.Item>
                     </ListGroup>

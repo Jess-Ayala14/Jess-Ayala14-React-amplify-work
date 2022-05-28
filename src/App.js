@@ -10,7 +10,6 @@ import Settings from './components/Auth/Settings/Settings';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-
 class App extends Component {
     
     state = {
@@ -48,6 +47,8 @@ class App extends Component {
             setAuthStatus: this.setAuthStatus,
             setUser: this.setUser
         }
+
+        
         return (
             <div className="App">
                 <Router>

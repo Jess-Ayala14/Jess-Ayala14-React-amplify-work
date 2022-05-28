@@ -1,0 +1,14 @@
+{
+  "resourceName": "Business",
+  "policyUUID": "1212f18c",
+  "bucketName": "businessdatabase",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

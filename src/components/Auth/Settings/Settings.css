@@ -1,7 +1,3 @@
-p {
-    text-transform: capitalize;
-}
-
 div.settings {
     height: 100vh;
     background-color: azure;
@@ -42,7 +38,8 @@ div.settings {
     text-transform: capitalize;
 }
 
-.settings-col-tab .settings-content p.profile-data {
+.settings-col-tab .settings-content p{
+    text-transform: capitalize;
     margin: auto;
 }
 
