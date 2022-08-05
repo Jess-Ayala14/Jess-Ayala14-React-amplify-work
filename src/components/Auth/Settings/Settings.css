@@ -29,9 +29,17 @@ div.settings {
 }
 
 .settings-col-tab .settings-content 
-                  .profile-list,.socialn-list,.bussiness-list {
+                  .profile-list,.socialn-list,.business-list {
     margin-top: 25px;
     margin-bottom: 25px;
+}
+
+.settings-col-tab .settings-content .business-list h6,p{
+    display: inline;
+}
+
+.settings-col-tab .settings-content .business-list .form-label{
+    text-align: center;
 }
 
 .settings-col-tab .settings-content .profile-list input{
@@ -57,14 +65,26 @@ div.settings {
     margin-top: 5px;
 }
 
-.settings .settings-col-tab .lightbox {
-    display:flex;
+.settings .settings-col-tab .lightbox, .lightbox1, .lightbox2{
     transition: 0.3s all;
     opacity: 1;
     pointer-events: auto;
 }
 
-.settings .settings-col-tab .hide-lightbox {
+.settings .settings-col-tab .hide-lightbox, .hide-lightbox1, .hide-lightbox2{
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.settings .settings-col-tab .lightbox2  .alertpass, .errorSuccess{
+    transition: 0.3s all;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.settings .settings-col-tab .lightbox2  .hide-alertpass, .hide-errorSuccess{
     display: none;
     opacity: 0;
     pointer-events: none;

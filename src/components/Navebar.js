@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { AmplifySignOut } from '@aws-amplify/ui-react'
 import { Auth } from 'aws-amplify';
-import { Navbar, Container, Nav, NavDropdown }
+import { Navbar, Container, Nav, NavDropdown, Col }
     from 'react-bootstrap';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 //import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
@@ -17,19 +17,25 @@ export default class Navebar extends Component {
         } catch (error) {
             console.log(error.message)
         }
+
     }
+
+
+
     render() {
-            
+
+
+
         return (
             <Navbar bg="primary" variant="dark" expand="lg">
                 <Container>
-                    {!this.props.auth.isAuthenticated && (
+                    {!this.props.auth.isAuthenticated  && (
                         <Navbar.Brand href="/">Ali-Media</Navbar.Brand>
                     )}
                     {this.props.auth.isAuthenticated && (
                         <Navbar.Brand href="/Signup">Ali-Media</Navbar.Brand>
                     )}
-                    <Navbar.Toggle/>
+                    <Navbar.Toggle />
                     <Navbar.Collapse id="basic-navbar-nav navbarScroll" >
                         {!this.props.auth.isAuthenticated && (
                             <Nav className="me-auto my-2 my-lg-0" navbarScroll>
@@ -54,12 +60,19 @@ export default class Navebar extends Component {
                                 <Nav.Link href="/Signup">Signup</Nav.Link>
                             )}
                             {this.props.auth.isAuthenticated && (
-                                <NavDropdown title=""
-                                    id="basic-nav-dropdown">
-                                    <NavDropdown.Item href="/Settings">Settings</NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item ><AmplifySignOut /></NavDropdown.Item>
-                                </NavDropdown>
+                                <Col xs={4} md={4}>
+                                    <NavDropdown title=""
+                                        id="basic-nav-dropdown">
+                                        <NavDropdown.Item href="/Settings">Settings</NavDropdown.Item>
+                                        <NavDropdown.Divider />
+                                        <NavDropdown.Item >
+
+                                            <AmplifySignOut />
+
+                                        </NavDropdown.Item>
+                                    </NavDropdown>
+                                </Col>
+
                             )}
                         </Nav>
                     </Navbar.Collapse>

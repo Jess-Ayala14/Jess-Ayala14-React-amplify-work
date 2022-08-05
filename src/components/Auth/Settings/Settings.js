@@ -9,11 +9,7 @@ import './Settings.css';
 
 
 function Settings() {
-
-  setTimeout(function () {
-    window.location.reload(1);
-  }, 100000);
-
+  
   return (
     <div className='settings'>
       <Container>
@@ -25,12 +21,12 @@ function Settings() {
         <br />
         <Row>
           <Col>
-            <Tab.Container id="left-tabs-example" defaultActiveKey="bussiness">
+            <Tab.Container id="left-tabs-example" defaultActiveKey="business">
               <Row>
                 <Col sm={3}>
                   <Nav variant="pills" className="flex-column">
                     <Nav.Item>
-                      <Nav.Link eventKey="bussiness">Bussiness Info</Nav.Link>
+                      <Nav.Link eventKey="business">Business Info</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
                       <Nav.Link eventKey="User">User Settings</Nav.Link>
@@ -55,8 +51,9 @@ function Settings() {
         </Row>
       </Container>
 
-
     </div>
+
+
   );
 }
 

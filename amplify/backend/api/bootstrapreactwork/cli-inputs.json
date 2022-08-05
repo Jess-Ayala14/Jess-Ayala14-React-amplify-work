@@ -1,12 +1,12 @@
 {
   "version": 1,
   "serviceConfiguration": {
-    "apiName": "bussinessDataBase",
+    "apiName": "bootstrapreactwork",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "F:\\AWS\\Bootstrap-React\\amplify\\backend\\api\\bussinessDataBase\\schema.graphql",
+    "gqlSchemaPath": "F:\\AWS\\Amplify-Works\\amplify\\backend\\api\\bootstrapreactwork\\schema.graphql",
     "defaultAuthType": {
       "mode": "AMAZON_COGNITO_USER_POOLS",
-      "cognitoUserPoolId": "authamplifyreactbasicf18c167c"
+      "cognitoUserPoolId": "authbootstrapreact491165cb"
     },
     "conflictResolution": {},
     "additionalAuthTypes": []

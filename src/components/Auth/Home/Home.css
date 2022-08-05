@@ -1,3 +1,7 @@
+.center{
+    text-align: center;
+}
+
 h6.user_welcoming{
     text-transform: capitalize;
     margin-top: .7rem;
@@ -5,17 +9,36 @@ h6.user_welcoming{
     font-size: .85rem;
 }
 
-div.profile{
+div.Home{
     height: 100vh;
     background-color: azure;
 }
 
-div.profile img{
+div.Home .card-body, .card-title, .card-subtitle{
+    text-align: center;
+    text-transform: capitalize;
+}
+
+div.Home .card-title{
+    font-size: 20px;
+}
+
+div.Home .card-body h4,p{
+    text-align: center;
+    text-transform: none;
+}
+
+
+div.Home .card-body .fade.tab-pane{
+    display: flex;
+}
+
+div.Home img, div.Business img{
     width: 136px;
     height: auto;
 }
 
-.profile .nav-item a.nav-link  {
+.Home .nav-item a.nav-link{
     color: #0d6efd;
     background-color: white;
     border-radius: 3px;
@@ -24,13 +47,13 @@ div.profile img{
 
 }
 
-.profile .nav-item a.nav-link.active  {
+.Home .nav-item a.nav-link.active{
     color: white;
     background-color: #5f9af1;
 
 }
 
-.profile-col-tab .socialM-content{ 
+.Home-col-tab .socialM-content{ 
     height: 25vh;
     background-color: #f6f8fa;
     border-radius: 5px;
@@ -38,7 +61,7 @@ div.profile img{
     border-style: ridge;
 }
 
-.profile .nav-pills .nav-link{
+.Home .nav-pills .nav-link {
     border: 1px;
     margin: 2px;
 }
@@ -48,7 +71,7 @@ div.profile img{
 }
 
 
-.modal-content>.modal-post .modal-header .modal-title.h4{
+.modal-header .modal-title{
     color: white;
 }
 

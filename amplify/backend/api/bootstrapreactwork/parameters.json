@@ -1,12 +1,11 @@
 {
-  "AppSyncApiName": "bussinessDataBase",
+  "AppSyncApiName": "bootstrapreactwork",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
   "AuthCognitoUserPoolId": {
     "Fn::GetAtt": [
-      "authamplifyreactbasicf18c167c",
+      "authbootstrapreact491165cb",
       "Outputs.UserPoolId"
     ]
-  },
-  "AuthModeLastUpdated": "2022-05-05T23:46:20.986Z"
+  }
 }
