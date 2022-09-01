@@ -1,7 +1,7 @@
 import React from 'react'
-import {Tab, Nav} from 'react-bootstrap'
+import { Tab, Nav } from 'react-bootstrap'
 
-export const Drafts = () => {
+export const Drafts = (loginFB) => {
     return (
         <>
             <Tab.Pane eventKey="drafts">
@@ -18,17 +18,22 @@ export const Drafts = () => {
                         </Nav.Item>
                     </Nav>
                     <div className="socialM-content">
-                    <Tab.Content>
-                        <Tab.Pane eventKey="facebook-draft">
-                            <p>Facebook Draft</p>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="instagram-draft">
-                            <p>Instagram Draft</p>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="twitter-draft">
-                            <p>Twitter Draft</p>
-                        </Tab.Pane>
-                    </Tab.Content>
+                        <Tab.Content>
+                            <Tab.Pane eventKey="facebook-draft">
+                                {loginFB.dataFromParent === true
+
+                                    ? <p>Facebook Draft</p>
+                                    : <p>Please Login on Facebook</p>
+
+                                }
+                            </Tab.Pane>
+                            <Tab.Pane eventKey="instagram-draft">
+                                <p>Instagram Draft</p>
+                            </Tab.Pane>
+                            <Tab.Pane eventKey="twitter-draft">
+                                <p>Twitter Draft</p>
+                            </Tab.Pane>
+                        </Tab.Content>
                     </div>
                 </Tab.Container>
             </Tab.Pane>

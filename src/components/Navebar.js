@@ -60,7 +60,7 @@ export default class Navebar extends Component {
                                 <Nav.Link href="/Signup">Signup</Nav.Link>
                             )}
                             {this.props.auth.isAuthenticated && (
-                                <Col xs={4} md={4}>
+                                <Col xs={6} md={4}>
                                     <NavDropdown title=""
                                         id="basic-nav-dropdown">
                                         <NavDropdown.Item href="/Settings">Settings</NavDropdown.Item>

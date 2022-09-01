@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Files from './Partials/Files';
 import Posted from './Partials/Posted';
 import Drafts from './Partials/Drafts';
@@ -10,6 +10,7 @@ import './Home.css';
 import { listBusinesses } from '../../../graphql/queries';
 import { createBusiness as createBusinessMutation }
     from '../../../graphql/mutations';
+//import { async } from 'rxjs';
 //import img_profile from '../../../storage/generic-profile.jpg'
 
 
@@ -23,10 +24,18 @@ const Home = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [loginFB, setlogin] = useState(false);
     //const DbTable = this.state.DbTable;
 
-
     useEffect(() => {
+        fetchBusiness();
+
+        scriptFB();
+
+        checkLoginState();
+
+        console.log(loginFB);
+
         (async () => {
             try {
                 const response = await Auth.currentAuthenticatedUser()
@@ -37,9 +46,60 @@ const Home = () => {
             }
         })()
 
-        fetchBusiness()
+    }, []);
 
-    }, [])
+    //////////////////////////////////API FACEBOOK////////////////////////////////////////////////////
+
+    async function checkLoginState () {
+        window.FB.getLoginStatus(function (response) {
+            statusChangeCallback(response);
+        });
+
+    }
+
+    const statusChangeCallback = (response) => {
+        if (response.status === 'connected') {
+            console.log('Logged in and authenticated');
+            setlogin(true);
+
+            // testAPI();
+        } else {
+            console.log('Not authenticated');
+            setlogin(false);
+
+        }
+
+    }
+
+    /////////////////////////////////////////////SCRIPT SDK //////////////////////////////////////////////////
+    const scriptFB = () => {
+        window.fbAsyncInit = function () {
+            window.FB.init({
+                appId: "801174264382809",
+                cookie: true,
+                xfbml: true,
+                version: 'v14.0'
+            });
+
+            window.FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+
+
+        };
+
+        // load facebook sdk script
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v14.0&appId=801174264382809&autoLogAppEvents=1";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const format = (variable) => {
         var data = variable
@@ -120,7 +180,15 @@ const Home = () => {
                                     ))}
                                 </Card>
                             </Col>
-                            <Col xs={3} md={6} lg={7} />
+                            <Col xs={3} md={6} lg={7}>
+                                {loginFB === true
+
+                                    ? <p>Graph API FB Inside</p>
+                                    : <p>Graph API FB Outside</p>
+
+                                }
+
+                            </Col>
                             <Col xs={3} md={3} lg={3}>
                                 <Button variant="primary" onClick={handleShow}>
                                     New Post
@@ -130,26 +198,26 @@ const Home = () => {
                         <br />
                         <Row>
                             <Tab.Container id="left-tabs-example" defaultActiveKey="files">
-                                    <Col sm={3} md={3} lg={2}>
-                                        <Nav variant="pills" className="flex-column">
-                                            <Nav.Item>
-                                                <Nav.Link eventKey="files">Files</Nav.Link>
-                                            </Nav.Item>
-                                            <Nav.Item>
-                                                <Nav.Link eventKey="posted">Posted</Nav.Link>
-                                            </Nav.Item>
-                                            <Nav.Item>
-                                                <Nav.Link eventKey="drafts">Draft</Nav.Link>
-                                            </Nav.Item>
-                                        </Nav>
-                                    </Col>
-                                    <Col className="Home-col-tab" sm={9} md={9} lg={8}>
-                                        <Tab.Content>
-                                            <Files />
-                                            <Posted />
-                                            <Drafts />
-                                        </Tab.Content>
-                                    </Col>
+                                <Col sm={3} md={3} lg={2}>
+                                    <Nav variant="pills" className="flex-column">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="files">Files</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="posted">Posted</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="drafts">Draft</Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                </Col>
+                                <Col className="Home-col-tab" sm={9} md={9} lg={8}>
+                                    <Tab.Content>
+                                        <Files dataFromParent = {loginFB} />
+                                        <Posted dataFromParent = {loginFB} />
+                                        <Drafts dataFromParent = {loginFB} />
+                                    </Tab.Content>
+                                </Col>
                             </Tab.Container>
                         </Row>
                     </div>
@@ -192,12 +260,15 @@ const Home = () => {
                                                         <Row className="justify-content-md-center">
                                                             <Col md={10} sm={12} lg={8}>
                                                                 <Form>
-                                                                    <Form.Label><h4>Tell us About your Business:</h4></Form.Label>
+                                                                    <Form.Label><h4>Tell us About your Business: *</h4></Form.Label>
                                                                     <Form.Control type="text" onChange={e => setFormData({ ...formData, 'name': e.target.value })}
-                                                                        placeholder="Type your Business name" value={formData.name} />
+                                                                        placeholder="Type your Business name *" value={formData.name} required />
                                                                     <br />
                                                                     <Form.Control type="text" onChange={e => setFormData({ ...formData, 'about': e.target.value })}
-                                                                        placeholder="About" value={formData.about} />
+                                                                        placeholder="Describe your Business *" value={formData.about} required />
+                                                                    <br />
+                                                                    <Form.Control type="tel" onChange={e => setFormData({ ...formData, 'phone': e.target.value })}
+                                                                        placeholder="Enter a Phone Number" value={formData.phone} />
                                                                     <br />
                                                                     <Form.Control type="file" onChange={onChange} />
                                                                     <br />

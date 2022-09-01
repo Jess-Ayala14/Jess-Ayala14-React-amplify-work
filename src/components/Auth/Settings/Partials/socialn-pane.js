@@ -7,17 +7,12 @@ import fb_logo from '../../../../storage/facebook.png';
 //import ins_logo from '../../../../storage/instagram.png';
 //import tw_logo from '../../../../storage/twitter.png';
 import { listBusinesses } from '../../../../graphql/queries';
-/*import {
-    updateBusiness as updateBusinessMutation
-} from '../../../../graphql/mutations';
-import { FacebookProvider, LoginButton } from 'react-facebook';
-*/
-
 
 
 const Socialn = () => {
 
     const [business, setBusiness] = useState([]);
+    const [loginFB, setlogin] = useState(false);
     const [show, setShow] = useState(false);
     const [show1, setShow1] = useState(false);
     const [show2, setShow2] = useState(false);
@@ -29,42 +24,101 @@ const Socialn = () => {
     const handleClose2 = () => setShow2(false);
     //const [isLoggedin, setIsLoggedin] = useState(false);
 
-    const onLoginClick = () => {
-        window.FB.login();
-    };
-
-    const onlogOut = () => {
-        window.FB.logout();
-    };
-
     useEffect(() => {
         fetchBusiness();
 
-        window.fbAsyncInit = () => {
+        scriptFB();
+
+        checkLoginState();
+
+        console.log(loginFB);
+
+        (async () => {
+            try {
+                const response = await Auth.currentAuthenticatedUser()
+                setState(response)
+            } catch (err) {
+                console.error(err)
+                setState(null)
+            }
+        })()
+
+    }, []);
+    /*
+        const handleResponse = (data) => {
+            console.log(data);
+        }
+    
+        const handleError = (error) => {
+            this.setState({ error });
+        }
+    */
+
+    //////////////////////////////////API FACEBOOK////////////////////////////////////////////////////
+    const onLogin = () => {
+        window.FB.login(function (response) {
+            setlogin(true);
+            window.location.reload();
+        });
+        //window.location.reload();
+    };
+
+    async function checkLoginState ()  {
+        window.FB.getLoginStatus(function (response) {
+            statusChangeCallback(response);
+        });
+
+    }
+
+    const statusChangeCallback = (response) => {
+        if (response.status === 'connected') {
+            console.log('Logged in and authenticated');
+            setlogin(true);
+
+            // testAPI();
+        } else {
+            console.log('Not authenticated');
+            setlogin(false);
+
+        }
+
+    }
+
+    const logoutFB = () => {
+        window.FB.logout(function (response) {
+            setlogin(false);
+            window.location.reload();
+        });
+
+    }
+
+    /////////////////////////////////////////////SCRIPT SDK //////////////////////////////////////////////////
+    const scriptFB = () => {
+        window.fbAsyncInit = function () {
             window.FB.init({
-                appId: '801174264382809',
-                autoLogAppEvents: true,
+                appId: "801174264382809",
+                cookie: true,
                 xfbml: true,
-                version: 'v11.0'
+                version: 'v14.0'
+            });
+
+            window.FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
             });
         };
+
+        // load facebook sdk script
         (function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) { return; }
             js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v14.0&appId=801174264382809&autoLogAppEvents=1";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
-    }, []);
-/*
-    const handleResponse = (data) => {
-        console.log(data);
-    }
 
-    const handleError = (error) => {
-        this.setState({ error });
+
     }
-*/
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async function fetchBusiness() {
         const apiData = await API.graphql({ query: listBusinesses });
         const BusinessFromAPI = apiData.data.listBusinesses.items;
@@ -79,57 +133,7 @@ const Socialn = () => {
         setBusiness(apiData.data.listBusinesses.items);
     }
 
-/*
-    async function Pair_FB_API() {
-        const apiData = await API.graphql({ query: listBusinesses });
-        const BusinessFromAPI = apiData.data.listBusinesses.items;
-        const id_businesses = BusinessFromAPI[0]['id']
-        await Promise.all(BusinessFromAPI.map(async business => {
-            return business;
-        }))
-
-        const updateBusiness = {
-            id: id_businesses,
-            facebook_API: '{"FB":1}'
-        }
-
-        await API.graphql({ query: updateBusinessMutation, variables: { input: updateBusiness } });
-        window.location.reload();
-    }
-
-    async function blank_FB_API() {
-        const apiData = await API.graphql({ query: listBusinesses });
-        const BusinessFromAPI = apiData.data.listBusinesses.items;
-        const id_businesses = BusinessFromAPI[0]['id']
-        await Promise.all(BusinessFromAPI.map(async business => {
-            return business;
-        }))
-
-        const updateBusiness = {
-            id: id_businesses,
-            facebook_API: ''
-        }
-
-        await API.graphql({ query: updateBusinessMutation, variables: { input: updateBusiness } });
-        window.location.reload();
-    }
-*/
-
     let [state, setState] = useState(null);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const response = await Auth.currentAuthenticatedUser()
-                setState(response)
-            } catch (err) {
-                console.error(err)
-                setState(null)
-            }
-        })()
-    }, [])
-
-
 
 
     if (!state) return <AmplifyLoadingSpinner />
@@ -142,7 +146,13 @@ const Socialn = () => {
                         <Col className='md-2 text-center'>
                             <img src={fb_logo} />
                             <br />
-                            <Button variant="primary" onClick={handleShow}>Pair</Button>
+                            <Button
+                                variant="primary"
+                                onClick={handleShow}
+                                className={`${loginFB ? 'hide-button' : 'show-button'}`}
+                            >
+                                Pair
+                            </Button>
                         </Col>
                         {/*
                         <Col className='text-center'>
@@ -159,8 +169,8 @@ const Socialn = () => {
                     </Row>
                     <Row>
                         <Col className='md-2 text-center'>
-                            <Button onClick={onlogOut} >
-                                Log out Facebook
+                            <Button className={`${loginFB === true ? 'show-button' : 'hide-button'}`} onClick={logoutFB} >
+                                Log out
                             </Button>
                         </Col>
                     </Row>
@@ -186,8 +196,8 @@ const Socialn = () => {
                         Close
                     </Button>
 
-                    <Button onClick={onLoginClick}>
-                        Login with Facebook
+                    <Button onClick={onLogin}>
+                        Login FB
                     </Button>
 
                 </Modal.Footer>

@@ -1,7 +1,10 @@
 import React from 'react'
 import { Tab, Nav } from 'react-bootstrap';
 
-export const Files = () => {
+export const Files = (loginFB) => {
+
+    //const [loginFB, setlogin] = useState(false);
+
     return (
         <>
             <Tab.Pane eventKey="files">
@@ -20,7 +23,12 @@ export const Files = () => {
                     <div className='socialM-content'>
                         <Tab.Content>
                             <Tab.Pane eventKey="facebook-files" Active>
-                                <p>Facebook Files</p>
+                                {loginFB.dataFromParent === true
+
+                                    ? <p>Facebook File</p>
+                                    : <p>Please Login on Facebook</p>
+
+                                }
                             </Tab.Pane>
                             <Tab.Pane eventKey="instagram-files">
                                 <p>Instagram Files</p>

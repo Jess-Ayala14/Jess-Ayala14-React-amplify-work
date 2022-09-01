@@ -10,7 +10,7 @@ import {
 } from '../../../../graphql/mutations';
 
 
-const initialFormState = { name: '', about: '' }
+const initialFormState = { name: '', about: '', phone: '' }
 
 const Bussiness = () => {
 
@@ -159,15 +159,15 @@ const Bussiness = () => {
                                         <Form>
                                             <Row className="justify-content-md-center">
                                                 <Col md="6 text-left">
-                                                    <Form.Label><h6>Tell us About your Business:</h6></Form.Label>
-                                                    <Form.Control type="text" onChange={e => setFormData({ ...formData, 'Name': e.target.value })}
-                                                        placeholder="Business name" value={formData.name} />
+                                                    <Form.Label><h6>Tell us About your Business: *</h6></Form.Label>
+                                                    <Form.Control type="text" onChange={e => setFormData({ ...formData, 'name': e.target.value })}
+                                                        placeholder="Type your Business name *" value={formData.name} required/>
                                                     <br />
-                                                    <Form.Control type="text" onChange={e => setFormData({ ...formData, 'About': e.target.value })}
-                                                        placeholder="About" value={formData.about} />
+                                                    <Form.Control type="text" onChange={e => setFormData({ ...formData, 'about': e.target.value })}
+                                                        placeholder="Describe your Business *" value={formData.about} required/>
                                                     <br />
-                                                    <Form.Control type="tel" onChange={e => setFormData({ ...formData, 'Phone': e.target.value })}
-                                                        placeholder="Phone" value={formData.phone} />
+                                                    <Form.Control type="tel" onChange={e => setFormData({ ...formData, 'phone': e.target.value })}
+                                                        placeholder="Enter a Phone  Number" value={formData.phone} />
                                                     <br />
                                                     <Form.Control type="file" onChange={onChange} />
                                                     <br />

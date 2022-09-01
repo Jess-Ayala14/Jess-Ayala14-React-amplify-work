@@ -10,6 +10,7 @@ import Pageundef from './components/Pageundef';
 import Settings from './components/Auth/Settings/Settings';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const initialFormState = { name: '', about: '' };
 
 class App extends Component {
 

@@ -1,7 +1,10 @@
 import React from 'react'
 import { Tab, Nav } from 'react-bootstrap';
 
-export const Posted = () => {
+export const Posted = (loginFB) => {
+
+    //const [loginFB, setlogin] = useState(false);
+
     return (
         <>
             <Tab.Pane eventKey="posted">
@@ -20,7 +23,12 @@ export const Posted = () => {
                     <div className='socialM-content'>
                         <Tab.Content>
                             <Tab.Pane eventKey="facebook-posted">
-                                <p>Facebook Posted</p>
+                                {loginFB.dataFromParent === true
+
+                                    ? <p>Facebook Posted</p>
+                                    : <p>Please Login on Facebook</p>
+
+                                }
                             </Tab.Pane>
                             <Tab.Pane eventKey="instagram-posted">
                                 <p>Instagram Posted</p>
