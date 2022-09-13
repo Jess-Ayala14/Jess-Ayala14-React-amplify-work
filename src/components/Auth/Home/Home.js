@@ -3,7 +3,7 @@ import Files from './Partials/Files';
 import Posted from './Partials/Posted';
 import Drafts from './Partials/Drafts';
 import { Auth, API, Storage } from 'aws-amplify';
-import { AmplifyLoadingSpinner } from '@aws-amplify/ui-react'
+import { AmplifyLoadingSpinner } from '@aws-amplify/ui-react';
 import { Container, Row, Col, Tab, Button, Modal, Nav, Form, Card, Pagination }
     from 'react-bootstrap';
 import './Home.css';
@@ -25,14 +25,17 @@ const Home = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [loginFB, setlogin] = useState(false);
+    const [img, setImg] = useState();
     //const DbTable = this.state.DbTable;
 
     useEffect(() => {
         fetchBusiness();
 
+     
+
         scriptFB();
 
-        checkLoginState();
+        checkLoginState(); 
 
         console.log(loginFB);
 
@@ -50,7 +53,7 @@ const Home = () => {
 
     //////////////////////////////////API FACEBOOK////////////////////////////////////////////////////
 
-    async function checkLoginState () {
+    async function checkLoginState() {
         window.FB.getLoginStatus(function (response) {
             statusChangeCallback(response);
         });
@@ -144,8 +147,6 @@ const Home = () => {
         fetchBusiness();
     }
 
-    const [img, setImg] = useState();
-
     const onImageChange = (e) => {
         const [file] = e.target.files;
         setImg(URL.createObjectURL(file));
@@ -197,14 +198,14 @@ const Home = () => {
                         </Row>
                         <br />
                         <Row>
-                            <Tab.Container id="left-tabs-example" defaultActiveKey="files">
+                            <Tab.Container id="left-tabs-example" defaultActiveKey="posted">
                                 <Col sm={3} md={3} lg={2}>
                                     <Nav variant="pills" className="flex-column">
                                         <Nav.Item>
-                                            <Nav.Link eventKey="files">Files</Nav.Link>
+                                            <Nav.Link eventKey="posted">Posted</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
-                                            <Nav.Link eventKey="posted">Posted</Nav.Link>
+                                            <Nav.Link eventKey="files">Files</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
                                             <Nav.Link eventKey="drafts">Draft</Nav.Link>
@@ -213,9 +214,9 @@ const Home = () => {
                                 </Col>
                                 <Col className="Home-col-tab" sm={9} md={9} lg={8}>
                                     <Tab.Content>
-                                        <Files dataFromParent = {loginFB} />
-                                        <Posted dataFromParent = {loginFB} />
-                                        <Drafts dataFromParent = {loginFB} />
+                                        <Posted dataFromParent={loginFB} />
+                                        <Files dataFromParent={loginFB} />
+                                        <Drafts dataFromParent={loginFB} />
                                     </Tab.Content>
                                 </Col>
                             </Tab.Container>

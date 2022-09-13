@@ -1,0 +1,36 @@
+div.policy {
+    height: 100vh;
+    background-color: azure;
+}
+
+
+div, .text-left {
+    text-align: left;
+}
+
+div, .text-center {
+    text-align: center;
+}
+
+div, .text-right {
+    text-align: right;
+}
+
+div, .text-justify {
+    text-align: justify;
+}
+
+
+/*//////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+.policy .policy-content {
+    height: 650px;
+    background-color: #f6f8faef;
+    border-radius: 5px;
+    border-color: #85b2f5;
+    border-style: ridge;
+}
+
+
+
+/*//////////////////////////////////////////////////////////////////////////////////////////////////////////*/

@@ -51,6 +51,7 @@ export default class Navebar extends Component {
 
                                     )}
                                 </Navbar.Brand>
+                                <Nav.Link href="/Analytics">Analytics</Nav.Link>
                             </Nav>
                         )}
                     </Navbar.Collapse>

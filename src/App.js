@@ -6,7 +6,9 @@ import Navebar from './components/Navebar';
 import Welcome from './components/Welcome';
 import Signup from './components/Signup';
 import About from './components/About';
+import Policy from './components/Policy'
 import Pageundef from './components/Pageundef';
+import Analytics from './components/Auth/Analytics/Analytics';
 import Settings from './components/Auth/Settings/Settings';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -60,6 +62,8 @@ class App extends Component {
                             <Route exact path="/signup" render={(props) => <Signup {...props} auth={authProps} />} />
                             <Route exact path="/about" render={(props) => <About {...props} auth={authProps} />} />
                             <Route exact path="/settings" render={(props) => <Settings {...props} auth={authProps} />} />
+                            <Route exact path="/analytics" render={(props) => <Analytics {...props} auth={authProps} />} />
+                            <Route exact path="/policy" render={(props) => <Policy {...props} auth={authProps} />} />
                             <Route exact path="*">
                                 <Pageundef />
                             </Route>

@@ -50,11 +50,52 @@ div.Home img, div.Business img{
 .Home .nav-item a.nav-link.active{
     color: white;
     background-color: #5f9af1;
+}
+
+.Home .nav-item a.nav-link.facebook{
+    color: #0d6efd;
+    background-color: white;
+    border-radius: 3px;
+    border-color: #0d6efd;
+    border-style: ridge;
 
 }
 
+.Home .nav-item a.nav-link.instagram{
+    color: #e86aed;
+    background-color: white;
+    border-radius: 3px;
+    border-color: #e86aed;
+    border-style: ridge;
+
+}
+
+.Home .nav-item a.nav-link.twitter{
+    color: #44d2f5;
+    background-color: white;
+    border-radius: 3px;
+    border-color: #44d2f5;
+    border-style: ridge;
+
+}
+
+.Home .nav-item a.nav-link.facebook.active{
+    color: white;
+    background-color: #5f9af1;
+}
+
+.Home .nav-item a.nav-link.instagram.active{
+    color: white;
+    background-color: #e86aed;
+}
+
+.Home .nav-item a.nav-link.twitter.active{
+    color: white;
+    background-color: #44d2f5;
+}
+
 .Home-col-tab .socialM-content{ 
-    height: 25vh;
+    height: 60vh;
     background-color: #f6f8fa;
     border-radius: 5px;
     border-color: #85b2f5;

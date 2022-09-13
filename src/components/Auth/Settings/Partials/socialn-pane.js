@@ -3,25 +3,21 @@ import { API, Auth, Storage } from 'aws-amplify';
 import { AmplifyLoadingSpinner } from '@aws-amplify/ui-react';
 import { Container, Row, Col, Tab, Button, Modal }
     from 'react-bootstrap';
-import fb_logo from '../../../../storage/facebook.png';
-//import ins_logo from '../../../../storage/instagram.png';
-//import tw_logo from '../../../../storage/twitter.png';
+import fb_ins_logo from '../../../../storage/fb-ins.png';
+import tw_logo from '../../../../storage/twitter.png';
 import { listBusinesses } from '../../../../graphql/queries';
 
 
 const Socialn = () => {
 
     const [business, setBusiness] = useState([]);
-    const [loginFB, setlogin] = useState(false);
+    const [loginFB, setloginFB] = useState(false);
     const [show, setShow] = useState(false);
     const [show1, setShow1] = useState(false);
-    const [show2, setShow2] = useState(false);
     const handleShow = () => setShow(true);
-    //const handleShow1 = () => setShow1(true);
-    //const handleShow2 = () => setShow2(true);
+    const handleShow1 = () => setShow1(true);
     const handleClose = () => setShow(false);
     const handleClose1 = () => setShow1(false);
-    const handleClose2 = () => setShow2(false);
     //const [isLoggedin, setIsLoggedin] = useState(false);
 
     useEffect(() => {
@@ -29,9 +25,7 @@ const Socialn = () => {
 
         scriptFB();
 
-        checkLoginState();
-
-        console.log(loginFB);
+        checkLoginStateFB();
 
         (async () => {
             try {
@@ -44,41 +38,36 @@ const Socialn = () => {
         })()
 
     }, []);
-    /*
-        const handleResponse = (data) => {
-            console.log(data);
-        }
-    
-        const handleError = (error) => {
-            this.setState({ error });
-        }
-    */
 
     //////////////////////////////////API FACEBOOK////////////////////////////////////////////////////
-    const onLogin = () => {
+    const onLoginFB = () => {
         window.FB.login(function (response) {
-            setlogin(true);
+            setloginFB(true);
             window.location.reload();
-        });
-        //window.location.reload();
+        },
+            {
+                scope: "email, public_profile ,pages_show_list, pages_read_engagement, pages_manage_posts,  pages_read_user_content" 
+            }
+        );
+
     };
 
-    async function checkLoginState ()  {
+    async function checkLoginStateFB() {
         window.FB.getLoginStatus(function (response) {
-            statusChangeCallback(response);
+            statusChangeCallbackFB(response);
         });
 
     }
 
-    const statusChangeCallback = (response) => {
+    const statusChangeCallbackFB = (response) => {
         if (response.status === 'connected') {
             console.log('Logged in and authenticated');
-            setlogin(true);
+            setloginFB(true);
 
             // testAPI();
         } else {
             console.log('Not authenticated');
-            setlogin(false);
+            setloginFB(false);
 
         }
 
@@ -86,7 +75,7 @@ const Socialn = () => {
 
     const logoutFB = () => {
         window.FB.logout(function (response) {
-            setlogin(false);
+            setloginFB(false);
             window.location.reload();
         });
 
@@ -103,7 +92,7 @@ const Socialn = () => {
             });
 
             window.FB.getLoginStatus(function (response) {
-                statusChangeCallback(response);
+                statusChangeCallbackFB(response);
             });
         };
 
@@ -118,7 +107,7 @@ const Socialn = () => {
 
 
     }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async function fetchBusiness() {
         const apiData = await API.graphql({ query: listBusinesses });
         const BusinessFromAPI = apiData.data.listBusinesses.items;
@@ -143,35 +132,33 @@ const Socialn = () => {
             <Container>
                 <div className='socialn-list'>
                     <Row className="justify-content-md-center">
-                        <Col className='md-2 text-center'>
-                            <img src={fb_logo} />
-                            <br />
-                            <Button
-                                variant="primary"
-                                onClick={handleShow}
-                                className={`${loginFB ? 'hide-button' : 'show-button'}`}
-                            >
-                                Pair
-                            </Button>
-                        </Col>
-                        {/*
                         <Col className='text-center'>
-                            <img src={ins_logo} />
+                            <img src={fb_ins_logo} />
                             <br />
-                            <Button variant="primary" onClick={handleShow1}>Pair</Button>
+                            <Row>
+                                <Col className='text-center'>
+                                    <Button
+                                        variant="primary"
+                                        onClick={handleShow}
+                                        className={`${loginFB ? 'hide-button' : 'show-button'}`}
+                                    >
+                                        Pair
+                                    </Button>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col className='text-center'>
+                                    <Button className={`${loginFB === true ? 'show-button' : 'hide-button'}`} onClick={logoutFB} >
+                                        Log out
+                                    </Button>
+                                </Col>
+                            </Row>
+
                         </Col>
                         <Col className='text-center'>
                             <img src={tw_logo} />
                             <br />
-                            <Button variant="primary" onClick={handleShow2}>Pair</Button>
-                        </Col>
-                        */}
-                    </Row>
-                    <Row>
-                        <Col className='md-2 text-center'>
-                            <Button className={`${loginFB === true ? 'show-button' : 'hide-button'}`} onClick={logoutFB} >
-                                Log out
-                            </Button>
+                            <Button variant="primary" onClick={handleShow1}>Pair</Button>
                         </Col>
                     </Row>
                 </div>
@@ -184,7 +171,7 @@ const Socialn = () => {
                     As a Guest to test this functional prototype
                     of the degree project for social networks and
                     with the purpose of incorporating them into it.
-                    You authorize the use of facebook from this website,
+                    You authorize the use of Facebook from this website,
                     you will authorize the API: Facebook for Developers,
                     authenticating as you do on Facebook. This website
                     could save certain credentials to avoid repeating this
@@ -196,7 +183,7 @@ const Socialn = () => {
                         Close
                     </Button>
 
-                    <Button onClick={onLogin}>
+                    <Button onClick={onLoginFB}>
                         Login FB
                     </Button>
 
@@ -204,25 +191,11 @@ const Socialn = () => {
             </Modal>
             <Modal show={show1} onHide={handleClose1}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Instagram Authorization</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Modal for Instagram </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose1}>
-                        Close
-                    </Button>
-                    <Button variant="primary">
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-            <Modal show={show2} onHide={handleClose2}>
-                <Modal.Header closeButton>
                     <Modal.Title>Twitter Authorization</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>Modal for Twitter </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose2}>
+                    <Button variant="secondary" onClick={handleClose1}>
                         Close
                     </Button>
                     <Button variant="primary">
