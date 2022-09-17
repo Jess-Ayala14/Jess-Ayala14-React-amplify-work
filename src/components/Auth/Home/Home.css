@@ -100,7 +100,17 @@ div.Home img, div.Business img{
     border-radius: 5px;
     border-color: #85b2f5;
     border-style: ridge;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
+
+.Home-col-tab .socialM-content .card{
+
+    border: 3px solid rgba(51, 30, 190, 0.125);
+}
+
+
+
 
 .Home .nav-pills .nav-link {
     border: 1px;

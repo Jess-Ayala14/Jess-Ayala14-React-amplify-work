@@ -1,61 +1,119 @@
-import React, { useState, useEffect } from 'react'
-import { Tab, Nav, Row, Col } from 'react-bootstrap';
+import React, { useEffect } from 'react'
+import { Tab, Nav, Row, Col, Card } from 'react-bootstrap';
+import { createStore, useGlobalState } from 'state-pool';
 
-
-
+const store = createStore();
+store.setState("posted", []);
 
 export const Posted = (loginFB) => {
 
+    const [posted, setposted] = store.useState("posted")
+
+    const APICALL = "me?fields=posts{id,message,full_picture,created_time,shares,reactions}"
+    const ACCESS_TOKEN = "EAALYqetuhVkBAKBixtLBnVBxdzHJlrsQqEKlJZAc3O1RDx9ZCzpqTGZCa8f9QvCuSMwvZCPIy2LEWHbaa63qPMOhQHgyZAIpkNL4QDyiZBq8P8rZC4aXLVWZBQ2UYPZBjZAvBdmai2itO0S6GuyXSLxT0IJUyAeB1oTTUv9enZCRYe1PECEQMhJuZCBR4ZCNmMmWtUgX2ZC7ldi6FoOcU9v5il4pV17u41sVeAylgZD"
 
     useEffect(() => {
 
-        startThis();
+        AllPosts()
 
     }, []);
 
-    async function startThis() {
-        var getUser = await fbposts(function (model) {
-            //console.log(model);
-            ShowPost(model)
-        });
+    function AllPosts(posted) {
 
 
-    };
-
-    function ShowPost(value) {
-
-        console.log('hello', Object.keys(value).length);
-
-        if (Object.keys(value).length > 0) {
-            for (let i = 0; i < Object.keys(value).length; i++) {
-
-                console.log(value[i]['id']);
-                //return <p>{value[i]['id']}</p>
-
-            };
-
-        }
-        return (<p>Hello</p>)
-    }
-
-    async function fbposts(callback) {
 
         window.FB.api(
-            "me?fields=posts{id,message,full_picture,created_time,shares,reactions}",
+            APICALL,
             "GET",
             {
-                access_token: "EAALYqetuhVkBAOCp7yVjFTkih1zjZBcvmOIRLexIQNRs9e9XNMY6f31Oac0OVLKM0e299ZAErCxmltreTmK4hZB4hWSXjGWK9g3ZBDPqIHL2wvW6K91gOnutASsPaq0ly1elGyEUvtFP0GIawGOE9gX79lEm8QvKmn75zwUHdiCPGVtZBFXOqZBQWhHWwUjEseoVFtTMEDS5gZC30ZCIplVP06O8X3QoU5sZD"
+                access_token: ACCESS_TOKEN
             },
             function (response) {
                 // Insert your code here
+                getPost(response);
 
-                callback(response['posts']['data']);
+                setposted(formatPost(getPost(response)))
+
+
 
             }
+
         );
 
 
-      
+        function getPost(response) {
+
+            const posts = response['posts']['data']
+
+            return posts
+        }
+
+        function formatPost(posts) {
+
+            const content = Object.keys(posts).map(key => {
+
+                return (
+
+                    [posts[key].id, posts[key].message, posts[key].full_picture]
+
+                );
+            })
+
+            return content
+        }
+
+    }
+
+    // console.log('hello',posted);
+
+
+
+    function NumberPost(props) {
+
+        const posts = props.posted;
+
+        console.log(posts);
+
+        const listItems = posts.map((post) =>
+            <Row>
+                <Col md={2} lg={3} />
+                <Col md={3} lg={3}>
+                    <br />
+                    <Card style={{ width: '18rem' }}>
+                        <Card.Body>
+                            <Card.Title><a href={'https://www.facebook.com/' + post[0]} target="_blank"><h6>Go to Post</h6></a></Card.Title>
+                            <Card.Text>
+                                <p>{post[1]}</p>
+                            </Card.Text>
+                            <br />
+                            <img src={post[2]} />
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col md={2} lg={3} />
+            </Row>
+        );
+
+        console.log(listItems)
+
+        return (
+            <ul>{listItems}</ul>
+        );
+    }
+
+    function NumberList() {
+
+        const numbers = [1, 2, 3, 4, 5];
+
+        const listItems = numbers.map((number) =>
+            <li>{number}</li>
+        );
+
+        console.log(listItems)
+
+        return (
+            <ul>{listItems}</ul>
+        );
     }
 
     /*
@@ -85,23 +143,25 @@ export const Posted = (loginFB) => {
                     <div className='socialM-content'>
                         <Tab.Content>
                             <Tab.Pane eventKey="facebook-posted">
-                                <br />
                                 {loginFB.dataFromParent === true
                                     ?
                                     <Row>
                                         <Col className="center">
-                                            <p>Facebook Posted</p>
                                             <br />
-                                            <ShowPost />
+                                            <NumberPost posted={posted} />
+
 
                                         </Col>
                                     </Row>
                                     :
-                                    <Row>
-                                        <Col className="center">
-                                            <p>Please Login on Facebook</p>
-                                        </Col>
-                                    </Row>
+                                    <>
+                                        <Row>
+                                            <Col className="center">
+                                                <p>Please Login on Facebook</p>
+                                            </Col>
+                                        </Row>
+                                        <NumberList />
+                                    </>
                                 }
                             </Tab.Pane>
                             <Tab.Pane eventKey="instagram-posted">
@@ -130,3 +190,6 @@ export const Posted = (loginFB) => {
 
 
 export default Posted
+
+
+
