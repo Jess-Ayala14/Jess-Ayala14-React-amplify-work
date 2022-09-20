@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react'
-import { Tab, Nav, Row, Col, Card } from 'react-bootstrap';
-import { createStore, useGlobalState } from 'state-pool';
+import { Tab, Nav, Row, Col, Card, Button } from 'react-bootstrap';
+import { createStore } from 'state-pool';
 
 const store = createStore();
 store.setState("posted", []);
 
-export const Posted = (loginFB) => {
+export const Posted = (data) => {
 
-    const [posted, setposted] = store.useState("posted")
-
-    const APICALL = "me?fields=posts{id,message,full_picture,created_time,shares,reactions}"
-    const ACCESS_TOKEN = "EAALYqetuhVkBAKBixtLBnVBxdzHJlrsQqEKlJZAc3O1RDx9ZCzpqTGZCa8f9QvCuSMwvZCPIy2LEWHbaa63qPMOhQHgyZAIpkNL4QDyiZBq8P8rZC4aXLVWZBQ2UYPZBjZAvBdmai2itO0S6GuyXSLxT0IJUyAeB1oTTUv9enZCRYe1PECEQMhJuZCBR4ZCNmMmWtUgX2ZC7ldi6FoOcU9v5il4pV17u41sVeAylgZD"
+    const loginFB = data['dataFromParent'][0]
+    const ACCESS_TOKEN = data['dataFromParent'][1];
+    const [posted, setposted] = store.useState("posted");
+    const APICALL = "me?fields=posts{id,message,full_picture,created_time,shares,reactions}";
 
     useEffect(() => {
 
@@ -19,8 +19,6 @@ export const Posted = (loginFB) => {
     }, []);
 
     function AllPosts(posted) {
-
-
 
         window.FB.api(
             APICALL,
@@ -33,8 +31,6 @@ export const Posted = (loginFB) => {
                 getPost(response);
 
                 setposted(formatPost(getPost(response)))
-
-
 
             }
 
@@ -72,21 +68,21 @@ export const Posted = (loginFB) => {
 
         const posts = props.posted;
 
-        console.log(posts);
-
         const listItems = posts.map((post) =>
             <Row>
                 <Col md={2} lg={3} />
                 <Col md={3} lg={3}>
                     <br />
                     <Card style={{ width: '18rem' }}>
+                        <Card.Title className='text-left'><a href={'https://www.facebook.com/' + post[0]} target="_blank">Go to post</a></Card.Title>
                         <Card.Body>
-                            <Card.Title><a href={'https://www.facebook.com/' + post[0]} target="_blank"><h6>Go to Post</h6></a></Card.Title>
-                            <Card.Text>
-                                <p>{post[1]}</p>
+                            <Card.Text className='text-justify'>
+                                {post[1]}
                             </Card.Text>
-                            <br />
-                            <img src={post[2]} />
+                            <div className='text-center'>
+                                <img src={post[2]} />
+                            </div>
+
                         </Card.Body>
                     </Card>
                 </Col>
@@ -94,36 +90,10 @@ export const Posted = (loginFB) => {
             </Row>
         );
 
-        console.log(listItems)
-
         return (
             <ul>{listItems}</ul>
         );
     }
-
-    function NumberList() {
-
-        const numbers = [1, 2, 3, 4, 5];
-
-        const listItems = numbers.map((number) =>
-            <li>{number}</li>
-        );
-
-        console.log(listItems)
-
-        return (
-            <ul>{listItems}</ul>
-        );
-    }
-
-    /*
-        
-            Graph API query Post
-            me?fields=posts{message,full_picture,created_time,shares,reactions}
-        
-            {id_post}?fields=message,full_picture,created_time,shares,likes,comments
-         
-    */
 
     return (
         <>
@@ -143,25 +113,34 @@ export const Posted = (loginFB) => {
                     <div className='socialM-content'>
                         <Tab.Content>
                             <Tab.Pane eventKey="facebook-posted">
-                                {loginFB.dataFromParent === true
+                                {loginFB == true
                                     ?
                                     <Row>
                                         <Col className="center">
                                             <br />
                                             <NumberPost posted={posted} />
-
-
                                         </Col>
                                     </Row>
                                     :
-                                    <>
-                                        <Row>
-                                            <Col className="center">
-                                                <p>Please Login on Facebook</p>
-                                            </Col>
-                                        </Row>
-                                        <NumberList />
-                                    </>
+                                    <Row>
+                                        <Col className="center">
+                                            <Row>
+                                                <br />
+                                                <Col md={2} lg={3} />
+                                                <Col md={3} lg={3}>
+                                                    <br/>
+                                                    <Card style={{ width: '18rem' }}>
+                                                        <Card.Body className='text-center'>
+                                                            <Card.Text>
+                                                                Please Login on Facebook
+                                                            </Card.Text>
+                                                            <Button href='/Settings'  variant="primary">Go to settings</Button>
+                                                        </Card.Body>
+                                                    </Card>
+                                                </Col>
+                                                <Col md={2} lg={3} />
+                                            </Row>                            </Col>
+                                    </Row>
                                 }
                             </Tab.Pane>
                             <Tab.Pane eventKey="instagram-posted">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
-import { AmplifyLoadingSpinner } from '@aws-amplify/ui-react'
+import { withAuthenticator } from '@aws-amplify/ui-react'
 
 
 const Analytics = () => {
@@ -21,8 +21,6 @@ const Analytics = () => {
 
     }, []);
 
-    if (!state) return <AmplifyLoadingSpinner />
-
     return (
         <div className='Analytics'>
             Here will be analytics
@@ -31,4 +29,4 @@ const Analytics = () => {
 
 }
 
-export default Analytics
+export default withAuthenticator(Analytics);

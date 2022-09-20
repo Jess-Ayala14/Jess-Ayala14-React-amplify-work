@@ -10,13 +10,15 @@ import './Home.css';
 import { listBusinesses } from '../../../graphql/queries';
 import { createBusiness as createBusinessMutation }
     from '../../../graphql/mutations';
-//import { async } from 'rxjs';
-//import img_profile from '../../../storage/generic-profile.jpg'
+import { createStore, useGlobalState } from 'state-pool';
 
+const store = createStore();
+store.setState("token", '');
 
 const initialFormState = { name: '', about: '' }
 
 const Home = () => {
+
 
     const [formData, setFormData] = useState(initialFormState);
     let [state, setState] = useState(null);
@@ -25,17 +27,17 @@ const Home = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [loginFB, setlogin] = useState(false);
+    const [access_token, savingtoken] = store.useState("token")
     const [img, setImg] = useState();
     //const DbTable = this.state.DbTable;
 
     useEffect(() => {
         fetchBusiness();
-
-     
-
         scriptFB();
-
-        checkLoginState(); 
+        checkLoginState();
+        if (access_token === '') {
+            queryToken()
+        }
 
         console.log(loginFB);
 
@@ -53,6 +55,29 @@ const Home = () => {
 
     //////////////////////////////////API FACEBOOK////////////////////////////////////////////////////
 
+    async function queryToken() {
+
+        window.FB.api(
+            "me?fields=accounts{access_token}",
+            "GET",
+
+            function (response) {
+                // Insert your code here
+                response = response["accounts"]['data'][0]['access_token']
+
+                getToken(response)
+            }
+
+        );
+    }
+
+    async function getToken(token) {
+
+        savingtoken(token)
+        console.log(access_token)
+    }
+
+
     async function checkLoginState() {
         window.FB.getLoginStatus(function (response) {
             statusChangeCallback(response);
@@ -60,7 +85,7 @@ const Home = () => {
 
     }
 
-    const statusChangeCallback = (response) => {
+    async function statusChangeCallback(response) {
         if (response.status === 'connected') {
             console.log('Logged in and authenticated');
             setlogin(true);
@@ -101,6 +126,10 @@ const Home = () => {
         }(document, 'script', 'facebook-jssdk'));
 
 
+    }
+
+    if (access_token === '') {
+        queryToken()
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -174,7 +203,7 @@ const Home = () => {
                                         <Card.Body>
                                             <Card.Title>{business.name}</Card.Title>
                                             <Card.Text>
-                                                <img src={business.image} alt="profile" />
+                                                <img className='profile_img' src={business.image} alt="profile" />
                                             </Card.Text>
                                             <Card.Subtitle>{business.about}</Card.Subtitle>
                                         </Card.Body>
@@ -214,7 +243,7 @@ const Home = () => {
                                 </Col>
                                 <Col className="Home-col-tab" sm={9} md={9} lg={8}>
                                     <Tab.Content>
-                                        <Posted dataFromParent={loginFB} />
+                                        <Posted dataFromParent={[loginFB, access_token]} />
                                         <Files dataFromParent={loginFB} />
                                         <Drafts dataFromParent={loginFB} />
                                     </Tab.Content>

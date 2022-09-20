@@ -1,44 +1,57 @@
-.center{
+.center {
     text-align: center;
 }
 
-h6.user_welcoming{
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+h6.user_welcoming {
     text-transform: capitalize;
     margin-top: .7rem;
     margin-bottom: .5rem;
     font-size: .85rem;
 }
 
-div.Home{
+div.Home {
     height: 100vh;
     background-color: azure;
 }
 
-div.Home .card-body, .card-title, .card-subtitle{
-    text-align: center;
-    text-transform: capitalize;
-}
-
-div.Home .card-title{
-    font-size: 20px;
-}
-
-div.Home .card-body h4,p{
+div.Home .card-body h4,
+p {
     text-align: center;
     text-transform: none;
 }
 
 
-div.Home .card-body .fade.tab-pane{
+div.Home .card-body .fade.tab-pane {
     display: flex;
 }
 
-div.Home img, div.Business img{
+div.Home img.profile_img,
+div.Business img.profile_img {
     width: 136px;
     height: auto;
 }
 
-.Home .nav-item a.nav-link{
+.Home .nav-item a.nav-link {
     color: #0d6efd;
     background-color: white;
     border-radius: 3px;
@@ -47,12 +60,12 @@ div.Home img, div.Business img{
 
 }
 
-.Home .nav-item a.nav-link.active{
+.Home .nav-item a.nav-link.active {
     color: white;
     background-color: #5f9af1;
 }
 
-.Home .nav-item a.nav-link.facebook{
+.Home .nav-item a.nav-link.facebook {
     color: #0d6efd;
     background-color: white;
     border-radius: 3px;
@@ -61,7 +74,7 @@ div.Home img, div.Business img{
 
 }
 
-.Home .nav-item a.nav-link.instagram{
+.Home .nav-item a.nav-link.instagram {
     color: #e86aed;
     background-color: white;
     border-radius: 3px;
@@ -70,7 +83,7 @@ div.Home img, div.Business img{
 
 }
 
-.Home .nav-item a.nav-link.twitter{
+.Home .nav-item a.nav-link.twitter {
     color: #44d2f5;
     background-color: white;
     border-radius: 3px;
@@ -79,22 +92,22 @@ div.Home img, div.Business img{
 
 }
 
-.Home .nav-item a.nav-link.facebook.active{
+.Home .nav-item a.nav-link.facebook.active {
     color: white;
     background-color: #5f9af1;
 }
 
-.Home .nav-item a.nav-link.instagram.active{
+.Home .nav-item a.nav-link.instagram.active {
     color: white;
     background-color: #e86aed;
 }
 
-.Home .nav-item a.nav-link.twitter.active{
+.Home .nav-item a.nav-link.twitter.active {
     color: white;
     background-color: #44d2f5;
 }
 
-.Home-col-tab .socialM-content{ 
+.Home-col-tab .socialM-content {
     height: 60vh;
     background-color: #f6f8fa;
     border-radius: 5px;
@@ -104,12 +117,29 @@ div.Home img, div.Business img{
     overflow-x: hidden;
 }
 
-.Home-col-tab .socialM-content .card{
+.Home-col-tab .socialM-content .card {
 
     border: 3px solid rgba(51, 30, 190, 0.125);
 }
 
 
+.Home-col-tab .socialM-content .card .card-title {
+    background: #e5e3f7;
+    padding-bottom: 7px;
+    padding-left: 7px;
+
+}
+
+.Home-col-tab .socialM-content .card .card-title a {
+    color: #f9fafb;
+    text-decoration: none;
+
+}
+
+.Home-col-tab .socialM-content .card .card-body img {
+    width: 200px;
+    height: auto;
+}
 
 
 .Home .nav-pills .nav-link {

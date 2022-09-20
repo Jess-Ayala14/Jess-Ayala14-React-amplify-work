@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { API, Auth, Storage } from 'aws-amplify';
-import { AmplifyLoadingSpinner } from '@aws-amplify/ui-react';
 import { Container, Row, Col, Tab, Button, Modal }
     from 'react-bootstrap';
 import fb_ins_logo from '../../../../storage/fb-ins.png';
 import tw_logo from '../../../../storage/twitter.png';
-import { listBusinesses } from '../../../../graphql/queries';
 
 
 const Socialn = () => {
 
-    const [business, setBusiness] = useState([]);
     const [loginFB, setloginFB] = useState(false);
     const [show, setShow] = useState(false);
     const [show1, setShow1] = useState(false);
@@ -21,21 +17,11 @@ const Socialn = () => {
     //const [isLoggedin, setIsLoggedin] = useState(false);
 
     useEffect(() => {
-        fetchBusiness();
 
         scriptFB();
 
         checkLoginStateFB();
 
-        (async () => {
-            try {
-                const response = await Auth.currentAuthenticatedUser()
-                setState(response)
-            } catch (err) {
-                console.error(err)
-                setState(null)
-            }
-        })()
 
     }, []);
 
@@ -46,7 +32,7 @@ const Socialn = () => {
             window.location.reload();
         },
             {
-                scope: "email, public_profile ,pages_show_list, pages_read_engagement, pages_manage_posts,  pages_read_user_content" 
+                scope: "email, public_profile ,pages_show_list, pages_read_engagement, pages_manage_posts,  pages_read_user_content"
             }
         );
 
@@ -108,24 +94,6 @@ const Socialn = () => {
 
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    async function fetchBusiness() {
-        const apiData = await API.graphql({ query: listBusinesses });
-        const BusinessFromAPI = apiData.data.listBusinesses.items;
-        await Promise.all(BusinessFromAPI.map(async business => {
-            if (business.image) {
-                Storage.configure({ level: 'private' })
-                const image = await Storage.get(business.image);
-                business.image = image;
-            }
-            return business;
-        }))
-        setBusiness(apiData.data.listBusinesses.items);
-    }
-
-    let [state, setState] = useState(null);
-
-
-    if (!state) return <AmplifyLoadingSpinner />
 
     return (
         <Tab.Pane eventKey="Social">
