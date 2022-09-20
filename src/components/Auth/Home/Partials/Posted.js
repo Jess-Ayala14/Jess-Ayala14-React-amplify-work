@@ -14,11 +14,11 @@ export const Posted = (data) => {
 
     useEffect(() => {
 
-        AllPosts()
+            AllPosts();        
 
     }, []);
 
-    function AllPosts(posted) {
+    function AllPosts() {
 
         window.FB.api(
             APICALL,
@@ -33,6 +33,8 @@ export const Posted = (data) => {
                 setposted(formatPost(getPost(response)))
 
             }
+
+            
 
         );
 
@@ -59,6 +61,8 @@ export const Posted = (data) => {
         }
 
     }
+
+   
 
     // console.log('hello',posted);
 
@@ -94,6 +98,28 @@ export const Posted = (data) => {
             <ul>{listItems}</ul>
         );
     }
+
+    function NumberList() {
+
+        const numbers = [1, 2, 3, 4, 5];
+
+        const listItems = numbers.map((number) =>
+            <li>{number}</li>
+        );
+
+        return (
+            <ul>{listItems}</ul>
+        );
+    }
+
+    /*
+        
+            Graph API query Post
+            me?fields=posts{message,full_picture,created_time,shares,reactions}
+        
+            {id_post}?fields=message,full_picture,created_time,shares,likes,comments
+         
+    */
 
     return (
         <>
@@ -134,7 +160,7 @@ export const Posted = (data) => {
                                                             <Card.Text>
                                                                 Please Login on Facebook
                                                             </Card.Text>
-                                                            <Button href='/Settings'  variant="primary">Go to settings</Button>
+                                                            <Button href='/Settings' variant="primary">Go to settings</Button>
                                                         </Card.Body>
                                                     </Card>
                                                 </Col>

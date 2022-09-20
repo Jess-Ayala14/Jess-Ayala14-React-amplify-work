@@ -35,7 +35,9 @@ const Home = () => {
         fetchBusiness();
         scriptFB();
         checkLoginState();
-        if (access_token === '') {
+        
+
+        if (loginFB === true && access_token === '') {
             queryToken()
         }
 
@@ -76,7 +78,6 @@ const Home = () => {
         savingtoken(token)
         console.log(access_token)
     }
-
 
     async function checkLoginState() {
         window.FB.getLoginStatus(function (response) {
@@ -127,10 +128,14 @@ const Home = () => {
 
 
     }
+  
 
-    if (access_token === '') {
+    if (loginFB === true && access_token === '') {
         queryToken()
     }
+
+    scriptFB();
+    //checkLoginState();
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const format = (variable) => {
