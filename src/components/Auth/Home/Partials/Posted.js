@@ -3,76 +3,105 @@ import { Tab, Nav, Row, Col, Card, Button } from 'react-bootstrap';
 import { createStore } from 'state-pool';
 
 const store = createStore();
-store.setState("posted", []);
+store.setState("FBposted", []);
+store.setState("InsPosted", []);
+
 
 export const Posted = (data) => {
 
     const loginFB = data['dataFromParent'][0]
     const ACCESS_TOKEN = data['dataFromParent'][1];
-    const [posted, setposted] = store.useState("posted");
-    const APICALL = "me?fields=posts{id,message,full_picture,created_time,shares,reactions}";
+    const [FBposted, setpostedFB] = store.useState("FBposted");
+    const [InsPosted, setpostedIns] = store.useState("InsPosted");
+    const APICALLFB = "me?fields=posts{id,message,full_picture,created_time,shares,reactions}";
+    const APICALLIns = "me?fields=instagram_business_account{media{permalink,media_type,caption,media_url}}"
+
+    // me?fields=instagram_business_account{media{id,media_type,caption,media_url}}  
+    //me?fields=instagram_business_account{id,username,biography}
+    //17841406287465765?fields=id,username,biography
 
     useEffect(() => {
 
-            AllPosts();        
+        AllPosts();
 
     }, []);
 
     function AllPosts() {
 
         window.FB.api(
-            APICALL,
+            APICALLFB,
             "GET",
             {
                 access_token: ACCESS_TOKEN
             },
             function (response) {
                 // Insert your code here
-                getPost(response);
+                getPostFB(response);
 
-                setposted(formatPost(getPost(response)))
+                setpostedFB(formatPostFB(getPostFB(response)))
 
             }
 
-            
+        );
+
+        window.FB.api(
+            APICALLIns,
+            "GET",
+            {
+                access_token: ACCESS_TOKEN
+            },
+            function (response) {
+                // Insert your code here
+                getPostIns(response);
+                setpostedIns(formatPostIns(getPostIns(response)))
+
+            }
 
         );
 
 
-        function getPost(response) {
-
+        function getPostFB(response) {
             const posts = response['posts']['data']
-
             return posts
         }
 
-        function formatPost(posts) {
+        function formatPostFB(posts) {
 
             const content = Object.keys(posts).map(key => {
-
                 return (
-
                     [posts[key].id, posts[key].message, posts[key].full_picture]
-
                 );
             })
-
             return content
         }
 
+        function getPostIns(response) {
+
+            const media = response['instagram_business_account']['media']['data'];
+            return media
+        }
+
+        
+        function formatPostIns(media) {
+
+            const content = Object.keys(media).map(key => {
+                return (
+                    [media[key].permalink, media[key].caption, media[key].media_url]
+                );
+            })
+            return content
+            
+        }
+        
+
     }
 
-   
 
-    // console.log('hello',posted);
+    function FBPost(props) {
 
+        const FBposted = props.posted;
 
-
-    function NumberPost(props) {
-
-        const posts = props.posted;
-
-        const listItems = posts.map((post) =>
+        const listItems = FBposted.map((post) =>
             <Row>
                 <Col md={2} lg={3} />
                 <Col md={3} lg={3}>
@@ -99,27 +128,38 @@ export const Posted = (data) => {
         );
     }
 
-    function NumberList() {
+    function InsPost(props) {
 
-        const numbers = [1, 2, 3, 4, 5];
+        const InsPosted = props.posted;
 
-        const listItems = numbers.map((number) =>
-            <li>{number}</li>
+        const listItems = InsPosted.map((post) =>
+            <Row>
+                <Col md={2} lg={3} />
+                <Col md={3} lg={3}>
+                    <br />
+                    <Card className='inst' style={{ width: '18rem' }}>
+                        <Card.Title className='text-left inst'><a href={post[0]} target="_blank">Go to post</a></Card.Title>
+                        <Card.Body>
+                            <Card.Text className='text-justify'>
+                                {post[1]}
+                            </Card.Text>
+                            <div className='text-center'>
+                                <img src={post[2]} />
+                            </div>
+
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col md={2} lg={3} />
+            </Row>
         );
 
         return (
             <ul>{listItems}</ul>
         );
+        
     }
 
-    /*
-        
-            Graph API query Post
-            me?fields=posts{message,full_picture,created_time,shares,reactions}
-        
-            {id_post}?fields=message,full_picture,created_time,shares,likes,comments
-         
-    */
 
     return (
         <>
@@ -144,7 +184,7 @@ export const Posted = (data) => {
                                     <Row>
                                         <Col className="center">
                                             <br />
-                                            <NumberPost posted={posted} />
+                                            <FBPost posted={FBposted} />
                                         </Col>
                                     </Row>
                                     :
@@ -154,7 +194,7 @@ export const Posted = (data) => {
                                                 <br />
                                                 <Col md={2} lg={3} />
                                                 <Col md={3} lg={3}>
-                                                    <br/>
+                                                    <br />
                                                     <Card style={{ width: '18rem' }}>
                                                         <Card.Body className='text-center'>
                                                             <Card.Text>
@@ -170,12 +210,35 @@ export const Posted = (data) => {
                                 }
                             </Tab.Pane>
                             <Tab.Pane eventKey="instagram-posted">
-                                <br />
-                                <Row>
-                                    <Col className="center">
-                                        <p>Instagram Posted</p>
-                                    </Col>
-                                </Row>
+                                {loginFB == true
+                                    ?
+                                    <Row>
+                                        <Col className="center">
+                                            <br />
+                                            <InsPost posted={InsPosted} />
+                                        </Col>
+                                    </Row>
+                                    :
+                                    <Row>
+                                        <Col className="center">
+                                            <Row>
+                                                <br />
+                                                <Col md={2} lg={3} />
+                                                <Col md={3} lg={3}>
+                                                    <br />
+                                                    <Card style={{ width: '18rem' }}>
+                                                        <Card.Body className='text-center'>
+                                                            <Card.Text>
+                                                                Please Authorize Instagram
+                                                            </Card.Text>
+                                                            <Button href='/Settings' className="btn-instagram">Go to settings</Button>
+                                                        </Card.Body>
+                                                    </Card>
+                                                </Col>
+                                                <Col md={2} lg={3} />
+                                            </Row>                            </Col>
+                                    </Row>
+                                }
                             </Tab.Pane>
                             <Tab.Pane eventKey="twitter-posted">
                                 <br />

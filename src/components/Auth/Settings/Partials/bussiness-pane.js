@@ -19,7 +19,7 @@ const Bussiness = () => {
     const [formData, setFormData] = useState(initialFormState);
 
     useEffect(() => {
-        
+
         fetchBusiness();
 
         (async () => {
@@ -39,27 +39,13 @@ const Bussiness = () => {
         await Promise.all(BusinessFromAPI.map(async business => {
             if (business.image) {
                 Storage.configure({ level: 'private' })
-                const image = await Storage.get(business.image);
+                const image = await Storage.get('Profile/' + business.image);
                 business.image = image;
             }
             return business;
         }))
         setBusiness(apiData.data.listBusinesses.items);
     }
-
-    /*
-    async function createBusiness() {
-        if (!formData.name || !formData.about) return;
-        await API.graphql({ query: createBusinessMutation, variables: { input: formData } });
-        if (formData.image) {
-            Storage.configure({ level: 'private' })
-            const image = await Storage.get(formData.image);
-            formData.image = image;
-        }
-        setBusiness([...business, formData]);
-        setFormData(initialFormState);
-    }
-    */
 
     async function createBusiness() {
         if (!formData.name || !formData.about) return;
@@ -161,10 +147,10 @@ const Bussiness = () => {
                                                 <Col md="6 text-left">
                                                     <Form.Label><h6>Tell us About your Business: *</h6></Form.Label>
                                                     <Form.Control type="text" onChange={e => setFormData({ ...formData, 'name': e.target.value })}
-                                                        placeholder="Type your Business name *" value={formData.name} required/>
+                                                        placeholder="Type your Business name *" value={formData.name} required />
                                                     <br />
                                                     <Form.Control type="text" onChange={e => setFormData({ ...formData, 'about': e.target.value })}
-                                                        placeholder="Describe your Business *" value={formData.about} required/>
+                                                        placeholder="Describe your Business *" value={formData.about} required />
                                                     <br />
                                                     <Form.Control type="tel" onChange={e => setFormData({ ...formData, 'phone': e.target.value })}
                                                         placeholder="Enter a Phone  Number" value={formData.phone} />

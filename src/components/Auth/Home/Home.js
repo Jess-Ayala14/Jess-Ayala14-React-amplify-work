@@ -11,16 +11,19 @@ import { listBusinesses } from '../../../graphql/queries';
 import { createBusiness as createBusinessMutation }
     from '../../../graphql/mutations';
 import { createStore, useGlobalState } from 'state-pool';
+import { async } from 'rxjs';
 
 const store = createStore();
 store.setState("token", '');
 
-const initialFormState = { name: '', about: '' }
+const initialFormState = { name: '', about: '', image: '' };
+const initialPostState = { description: '', picture: '' };
 
 const Home = () => {
 
 
     const [formData, setFormData] = useState(initialFormState);
+    const [newPostData, setFormData1] = useState(initialPostState);
     let [state, setState] = useState(null);
     const [business, setBusiness] = useState([]);
     const [show, setShow] = useState(false);
@@ -29,13 +32,10 @@ const Home = () => {
     const [loginFB, setlogin] = useState(false);
     const [access_token, savingtoken] = store.useState("token")
     const [img, setImg] = useState();
-    //const DbTable = this.state.DbTable;
 
     useEffect(() => {
         fetchBusiness();
         scriptFB();
-        checkLoginState();
-        
 
         if (loginFB === true && access_token === '') {
             queryToken()
@@ -57,7 +57,7 @@ const Home = () => {
 
     //////////////////////////////////API FACEBOOK////////////////////////////////////////////////////
 
-    async function queryToken() {
+    function queryToken() {
 
         window.FB.api(
             "me?fields=accounts{access_token}",
@@ -73,31 +73,54 @@ const Home = () => {
         );
     }
 
-    async function getToken(token) {
+    function getToken(token) {
 
         savingtoken(token)
         console.log(access_token)
     }
 
-    async function checkLoginState() {
-        window.FB.getLoginStatus(function (response) {
-            statusChangeCallback(response);
-        });
+    async function new_post() {
 
-    }
+        if (!newPostData.description && !newPostData.picture) return;
 
-    async function statusChangeCallback(response) {
-        if (response.status === 'connected') {
-            console.log('Logged in and authenticated');
-            setlogin(true);
+        const split = newPostData.picture.split("fakepath\\");
+        newPostData.picture = split[1];
+        Storage.configure({ level: 'private' })
+        const urlImg = await Storage.get('temp/' + newPostData.picture);
 
-            // testAPI();
-        } else {
-            console.log('Not authenticated');
-            setlogin(false);
+        var params = {
+            //Page Token with publish_pages (to post as Page)
+            access_token: access_token,
+            //status message
+            message: newPostData.description,
+            //absolute url to the image, must be public
+            url: urlImg
+        };
 
+        window.FB.api(
+            "me?fields=id",
+            "GET",
+            {
+                access_token: access_token
+            },
+            function (response) {
+                // Insert your code here
+                post(response.id)
+
+            }
+        );
+
+        function post(page_id) {
+            window.FB.api(
+                page_id + '/photos?',
+                'POST',
+                params,
+                function (response) {
+                    console.log(response)
+                    window.location.reload();
+                }
+            );
         }
-
     }
 
     /////////////////////////////////////////////SCRIPT SDK //////////////////////////////////////////////////
@@ -117,6 +140,27 @@ const Home = () => {
 
         };
 
+        function checkLoginState() {
+            window.FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+
+        }
+
+        function statusChangeCallback(response) {
+            if (response.status === 'connected') {
+                console.log('Logged in and authenticated');
+                setlogin(true);
+
+                // testAPI();
+            } else {
+                console.log('Not authenticated');
+                setlogin(false);
+
+            }
+
+        }
+
         // load facebook sdk script
         (function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
@@ -128,7 +172,7 @@ const Home = () => {
 
 
     }
-  
+
 
     if (loginFB === true && access_token === '') {
         queryToken()
@@ -152,7 +196,7 @@ const Home = () => {
         await Promise.all(BusinessFromAPI.map(async business => {
             if (business.image) {
                 Storage.configure({ level: 'private' })
-                const image = await Storage.get(business.image)
+                const image = await Storage.get('Profile/' + business.image)
                 business.image = image
             }
             return business
@@ -177,13 +221,22 @@ const Home = () => {
         const file = e.target.files[0];
         setFormData({ ...formData, image: file.name });
         Storage.configure({ level: 'private' })
-        await Storage.put(file.name, file);
+        await Storage.put("Profile/" + file.name, file, {
+            contentType: "image/png"
+        });
         fetchBusiness();
     }
 
-    const onImageChange = (e) => {
+    //e => setFormData1({ ...newPostData, 'description': e.target.value })}
+    async function onImageChange(e) {
+        if (!e.target.files[0].name) return
+        setFormData1({ ...newPostData, "picture": e.target.value });
         const [file] = e.target.files;
         setImg(URL.createObjectURL(file));
+        Storage.configure({ level: 'private' })
+        await Storage.put("temp/" + e.target.files[0].name, file, {
+            contentType: "image/png"
+        });
     }
 
     const Table = () => {
@@ -225,7 +278,7 @@ const Home = () => {
 
                             </Col>
                             <Col xs={3} md={3} lg={3}>
-                                <Button variant="primary" onClick={handleShow}>
+                                <Button variant="primary" onClick={handleShow} disabled={loginFB === true ? '' : true}>
                                     New Post
                                 </Button>
                             </Col>
@@ -354,13 +407,14 @@ const Home = () => {
                         <Form>
                             <Form.Group className="mb-3" controlId="formFileMultiple">
                                 <Form.Label>Select Image</Form.Label>
-                                <Form.Control type="file" onChange={onImageChange} />
+                                <Form.Control type="file" name='picture' onChange={onImageChange} value={newPostData.picture} required={true} />
                                 <br />
                                 <img src={img} alt="" />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                                 <Form.Label>Enter a Description</Form.Label>
-                                <Form.Control as="textarea" rows={3} />
+                                <Form.Control as="textarea" rows={3} value={newPostData.description} name="description"
+                                    onChange={e => setFormData1({ ...newPostData, 'description': e.target.value })} />
                             </Form.Group>
                         </Form>
                     </Modal.Body>
@@ -368,7 +422,7 @@ const Home = () => {
                         <Button variant="secondary" onClick={handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" onClick={handleClose}>
+                        <Button variant="primary" onClick={new_post}>
                             Post
                         </Button>
                     </Modal.Footer>
