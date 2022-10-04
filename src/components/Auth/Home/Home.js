@@ -11,13 +11,13 @@ import { listBusinesses } from '../../../graphql/queries';
 import { createBusiness as createBusinessMutation }
     from '../../../graphql/mutations';
 import { createStore, useGlobalState } from 'state-pool';
-import { async } from 'rxjs';
+import { async, windowWhen } from 'rxjs';
 
 const store = createStore();
 store.setState("token", '');
 
 const initialFormState = { name: '', about: '', image: '' };
-const initialPostState = { description: '', picture: '' };
+const initialPostState = { description: '', picture: '', fb_checkbox: false, inst_checkbox: false };
 
 const Home = () => {
 
@@ -27,7 +27,6 @@ const Home = () => {
     let [state, setState] = useState(null);
     const [business, setBusiness] = useState([]);
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [loginFB, setlogin] = useState(false);
     const [access_token, savingtoken] = store.useState("token")
@@ -79,49 +78,151 @@ const Home = () => {
         console.log(access_token)
     }
 
+    const handleClose = () => {
+        setShow(false);
+        newPostData.description = '';
+        newPostData.picture = '';
+        newPostData.fb_checkbox = '';
+        newPostData.inst_checkbox = ''
+        setImg('');
+
+    }
+
     async function new_post() {
 
         if (!newPostData.description && !newPostData.picture) return;
 
-        const split = newPostData.picture.split("fakepath\\");
-        newPostData.picture = split[1];
-        Storage.configure({ level: 'private' })
-        const urlImg = await Storage.get('temp/' + newPostData.picture);
+        console.log('FB' + newPostData.fb_checkbox, 'inst' + newPostData.inst_checkbox)
 
-        var params = {
-            //Page Token with publish_pages (to post as Page)
-            access_token: access_token,
-            //status message
-            message: newPostData.description,
-            //absolute url to the image, must be public
-            url: urlImg
-        };
+        if (newPostData.fb_checkbox === true || newPostData.inst_checkbox === true) {
 
-        window.FB.api(
-            "me?fields=id",
-            "GET",
-            {
-                access_token: access_token
-            },
-            function (response) {
-                // Insert your code here
-                post(response.id)
+            const split = newPostData.picture.split("fakepath\\");
+            newPostData.picture = split[1];
+            Storage.configure({ level: 'private' })
+            const urlImg = await Storage.get('temp/' + newPostData.picture);
 
-            }
-        );
 
-        function post(page_id) {
-            window.FB.api(
-                page_id + '/photos?',
-                'POST',
-                params,
-                function (response) {
-                    console.log(response)
-                    window.location.reload();
+            if (newPostData.fb_checkbox === true) {
+                function fbPosting() {
+                    var params = {
+                        //Page Token with publish_pages (to post as Page)
+                        access_token: access_token,
+                        //status message
+                        message: newPostData.description,
+                        //absolute url to the image, must be public
+                        url: urlImg,
+
+                    };
+
+                    window.FB.api(
+                        "me?fields=id",
+                        "GET",
+                        {
+                            access_token: access_token
+                        },
+                        function (response) {
+                            // Insert your code here
+                            post(response.id)
+
+                        }
+                    );
+
+                    function post(page_id) {
+                        window.FB.api(
+                            page_id + '/photos?',
+                            'POST',
+                            params,
+                            function (response) {
+
+                                console.log(urlImg, response)
+                                if (!response.error) {
+                                    alert("FB: Publication was successful")
+                                    window.location.reload();
+                                }
+                                else {
+                                    alert("FB: ", toString(response.error.message))
+                                }
+                            }
+                        );
+
+                    }
+
                 }
-            );
+
+                fbPosting(urlImg);
+            }
+
+
+            if (newPostData.inst_checkbox === true) {
+                function instPosting() {
+                    var params = {
+                        //Page Token with publish_pages (to post as Page)
+                        //access_token: access_token,
+                        //status message
+                        caption: newPostData.description,
+                        //absolute url to the image, must be public
+                        image_url: urlImg,
+
+                    };
+
+                    window.FB.api(
+                        "me?fields=instagram_business_account{id}",
+                        "GET",
+                        {
+                            access_token: access_token
+                        },
+                        function (response) {
+                            // Insert your code here
+                            media(response["instagram_business_account"]["id"])
+
+                        }
+                    );
+
+                    function media(insta_id) {
+                        window.FB.api(
+                            insta_id + '/media',
+                            'POST',
+                            params,
+                            function (response) {
+                                console.log(response)
+
+                                if (response['id']!=='') {
+                                    
+                                    alert("Inst: Publication was successful")
+                                    window.location.reload();
+                                    media_publish(insta_id,response.id)
+                                }
+                                else {
+                                    alert("Inst: ", toString(response))
+                                }
+                            }
+                        );
+                    }
+
+                    function media_publish(insta_id, id_media) {
+
+                        window.FB.api(
+                            insta_id + '/media_publish',
+                            'POST',
+                            { "creation_id": id_media },
+                            function (response) {
+                                console.log("Media Posted:", response)
+                            }
+                        );
+
+                    }
+                }
+                instPosting(urlImg)
+            }
+
         }
+        else {
+            alert("Check at least one option")
+            handleClose()
+        }
+
     }
+
 
     /////////////////////////////////////////////SCRIPT SDK //////////////////////////////////////////////////
     const scriptFB = () => {
@@ -404,19 +505,41 @@ const Home = () => {
                         <Modal.Title>New Post</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form>
-                            <Form.Group className="mb-3" controlId="formFileMultiple">
-                                <Form.Label>Select Image</Form.Label>
-                                <Form.Control type="file" name='picture' onChange={onImageChange} value={newPostData.picture} required={true} />
+                        <Container>
+                            <Form>
+                                <Row>
+                                    <Col xs={4}>
+                                        <Form.Group>
+                                            <Form.Check type="checkbox" name="fb_checkbox" value={newPostData.fb_checkbox} label="Facebook"
+                                                onChange={e => setFormData1({ ...newPostData, 'fb_checkbox': e.target.checked })} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col xs={4}>
+                                        <Form.Group>
+                                            <Form.Check type="checkbox" name="inst_checkbox" value={newPostData.inst_checkbox} label="instagram"
+                                                onChange={e => setFormData1({ ...newPostData, 'inst_checkbox': e.target.checked })} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col xs={4}>
+                                        <Form.Group>
+                                            <Form.Check type="checkbox" label="Twitter" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
                                 <br />
-                                <img src={img} alt="" />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                                <Form.Label>Enter a Description</Form.Label>
-                                <Form.Control as="textarea" rows={3} value={newPostData.description} name="description"
-                                    onChange={e => setFormData1({ ...newPostData, 'description': e.target.value })} />
-                            </Form.Group>
-                        </Form>
+                                <Form.Group className="mb-3" controlId="formFileMultiple">
+                                    <Form.Label>Select Image</Form.Label>
+                                    <Form.Control type="file" name='picture' onChange={onImageChange} value={newPostData.picture} required={true} />
+                                    <br />
+                                    <img src={img} alt="" />
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                                    <Form.Label>Enter a Description</Form.Label>
+                                    <Form.Control as="textarea" rows={3} value={newPostData.description} name="description"
+                                        onChange={e => setFormData1({ ...newPostData, 'description': e.target.value })} />
+                                </Form.Group>
+                            </Form>
+                        </Container>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>

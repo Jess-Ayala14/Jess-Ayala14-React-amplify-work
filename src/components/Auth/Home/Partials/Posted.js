@@ -21,10 +21,14 @@ export const Posted = (data) => {
     //17841406287465765?fields=id,username,biography
 
     useEffect(() => {
-
-        AllPosts();
+        
+        if (loginFB !== false) {
+            AllPosts();
+        }
 
     }, []);
+
+
 
     function AllPosts() {
 
@@ -81,7 +85,7 @@ export const Posted = (data) => {
             return media
         }
 
-        
+
         function formatPostIns(media) {
 
             const content = Object.keys(media).map(key => {
@@ -90,9 +94,9 @@ export const Posted = (data) => {
                 );
             })
             return content
-            
+
         }
-        
+
 
     }
 
@@ -131,7 +135,6 @@ export const Posted = (data) => {
     function InsPost(props) {
 
         const InsPosted = props.posted;
-
         const listItems = InsPosted.map((post) =>
             <Row>
                 <Col md={2} lg={3} />
@@ -157,7 +160,7 @@ export const Posted = (data) => {
         return (
             <ul>{listItems}</ul>
         );
-        
+
     }
 
 
@@ -226,7 +229,7 @@ export const Posted = (data) => {
                                                 <Col md={2} lg={3} />
                                                 <Col md={3} lg={3}>
                                                     <br />
-                                                    <Card style={{ width: '18rem' }}>
+                                                    <Card className="inst" style={{ width: '18rem' }}>
                                                         <Card.Body className='text-center'>
                                                             <Card.Text>
                                                                 Please Authorize Instagram

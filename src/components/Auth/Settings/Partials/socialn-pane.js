@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
+//import TwitterApi from 'twitter-v2'
 import { Container, Row, Col, Tab, Button, Modal }
     from 'react-bootstrap';
+import { async } from 'rxjs';
 import fb_ins_logo from '../../../../storage/fb-ins.png';
 import tw_logo from '../../../../storage/twitter.png';
 
@@ -95,6 +97,11 @@ const Socialn = () => {
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/*
+    function logginTwit() {
+        const client = new TwitterApi('974707486769983490-quuU6MJmVj0IGKd57bwmxUgiyQyqUVw');
+    }
+*/
     return (
         <Tab.Pane eventKey="Social">
             <Container>
@@ -161,13 +168,17 @@ const Socialn = () => {
                 <Modal.Header closeButton>
                     <Modal.Title>Twitter Authorization</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Modal for Twitter </Modal.Body>
+                <Modal.Body>
+                    <h4>Modal for twitter</h4>
+
+
+                </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose1}>
                         Close
                     </Button>
                     <Button variant="primary">
-                        Save Changes
+                        Login Twitter
                     </Button>
                 </Modal.Footer>
             </Modal>

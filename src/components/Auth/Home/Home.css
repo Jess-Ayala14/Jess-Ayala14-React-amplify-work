@@ -122,18 +122,33 @@ div.Business img.profile_img {
     border: 3px solid #5f9af1;
 }
 
-.Home-col-tab .socialM-content .card.inst {
-
-    border: 3px solid #e86aed;
-}
-
-
 .Home-col-tab .socialM-content .card .card-title {
     background: #5f9af1;
     padding-bottom: 7px;
     padding-left: 7px;
 
 }
+
+.Home-col-tab .socialM-content .card.inst {
+
+    border: 3px solid #e86aed;
+}
+
+.Home-col-tab .socialM-content .card.inst .btn-instagram{
+
+    color: #fff;
+    background-color: #e86aca;
+    border-color: #e86abe;
+}
+
+.Home-col-tab .socialM-content .card.inst .btn-instagram:hover{
+
+    color: #fff;
+    background-color: #e86abe;
+    border-color: #a529be;
+}
+
+
 
 .Home-col-tab .socialM-content .card .card-title.inst {
     background: #e86aed;
