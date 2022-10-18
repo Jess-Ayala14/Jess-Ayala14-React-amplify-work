@@ -11,6 +11,7 @@ export const onCreateBusiness = /* GraphQL */ `
       address
       user_Id
       image
+      website
       facebook_API
       createdAt
       updatedAt
@@ -28,6 +29,7 @@ export const onUpdateBusiness = /* GraphQL */ `
       address
       user_Id
       image
+      website
       facebook_API
       createdAt
       updatedAt
@@ -45,6 +47,7 @@ export const onDeleteBusiness = /* GraphQL */ `
       address
       user_Id
       image
+      website
       facebook_API
       createdAt
       updatedAt

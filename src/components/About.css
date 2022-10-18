@@ -1,0 +1,40 @@
+.center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+div.About {
+    height: 100vh;
+    background-color: #0b0b2a;
+}
+
+div.About .container{
+    padding-top: 135px;
+}
+
+div.About .container h3.title-about {
+    color: #eeeeee;
+}
+
+div.About .container p.text-about {
+    color: #eeeeee;
+}

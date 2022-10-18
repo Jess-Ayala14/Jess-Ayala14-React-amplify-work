@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Bussiness from './Partials/bussiness-pane';
 import Profile from './Partials/profile-pane';
 import Socialn from './Partials/socialn-pane';
@@ -6,9 +6,11 @@ import { withAuthenticator } from '@aws-amplify/ui-react'
 import { Container, Row, Col, Tab, Nav }
   from 'react-bootstrap';
 import './Settings.css';
+import { async } from 'rxjs';
 
 
 function Settings() {
+
   
   return (
     <div className='settings'>
@@ -39,7 +41,7 @@ function Settings() {
                 <Col className="settings-col-tab" sm={9}>
                   <div className='settings-content'>
                     <Tab.Content>
-                      <Bussiness />
+                      <Bussiness/>
                       <Profile />
                       <Socialn />
                     </Tab.Content>

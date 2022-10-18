@@ -1,6 +1,6 @@
 {
   "auth": {
-    "bootstrapreact491165cb": {
+    "alimediatools8a8d7ad7": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -26,13 +26,13 @@
     }
   },
   "api": {
-    "bootstrapreactwork": {
+    "alimediatools": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "bootstrapreact491165cb",
+          "resourceName": "alimediatools8a8d7ad7",
           "attributes": [
             "UserPoolId"
           ]
@@ -43,7 +43,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authbootstrapreact491165cb"
+              "userPoolId": "authalimediatools8a8d7ad7"
             }
           },
           "additionalAuthenticationProviders": []
@@ -52,20 +52,20 @@
     }
   },
   "function": {
-    "S3Trigger651ff5bf": {
+    "S3Trigger6218625d": {
       "service": "Lambda",
       "providerPlugin": "awscloudformation",
       "build": true
     }
   },
   "storage": {
-    "s3e9e060e7": {
+    "s303a4ba8f": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "S3Trigger651ff5bf",
+          "resourceName": "S3Trigger6218625d",
           "attributes": [
             "Name",
             "Arn",

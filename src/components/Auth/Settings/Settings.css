@@ -51,6 +51,11 @@ div.settings {
     width: auto;
 }
 
+.settings .settings-content .business-list img {
+    height: 120px;
+    width: auto;
+}
+
 .settings .settings-content .btn-primary {
     margin-top: 5px;
 }

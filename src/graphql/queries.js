@@ -11,6 +11,7 @@ export const getBusiness = /* GraphQL */ `
       address
       user_Id
       image
+      website
       facebook_API
       createdAt
       updatedAt
@@ -33,6 +34,7 @@ export const listBusinesses = /* GraphQL */ `
         address
         user_Id
         image
+        website
         facebook_API
         createdAt
         updatedAt

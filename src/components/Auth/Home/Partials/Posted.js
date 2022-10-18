@@ -195,10 +195,10 @@ export const Posted = (data) => {
                                         <Col className="center">
                                             <Row>
                                                 <br />
-                                                <Col md={2} lg={3} />
-                                                <Col md={3} lg={3}>
+                                                <Col xs={1} md={2} lg={3} />
+                                                <Col xs={10} md={3} lg={3}>
                                                     <br />
-                                                    <Card style={{ width: '18rem' }}>
+                                                    <Card>
                                                         <Card.Body className='text-center'>
                                                             <Card.Text>
                                                                 Please Login on Facebook
@@ -207,7 +207,7 @@ export const Posted = (data) => {
                                                         </Card.Body>
                                                     </Card>
                                                 </Col>
-                                                <Col md={2} lg={3} />
+                                                <Col xs={1} md={2} lg={3} />
                                             </Row>                            </Col>
                                     </Row>
                                 }
@@ -226,8 +226,8 @@ export const Posted = (data) => {
                                         <Col className="center">
                                             <Row>
                                                 <br />
-                                                <Col md={2} lg={3} />
-                                                <Col md={3} lg={3}>
+                                                <Col xs={1} md={2} lg={3} />
+                                                <Col xs={10} md={3} lg={3}>
                                                     <br />
                                                     <Card className="inst" style={{ width: '18rem' }}>
                                                         <Card.Body className='text-center'>
@@ -238,7 +238,7 @@ export const Posted = (data) => {
                                                         </Card.Body>
                                                     </Card>
                                                 </Col>
-                                                <Col md={2} lg={3} />
+                                                <Col xs={1} md={2} lg={3} />
                                             </Row>                            </Col>
                                     </Row>
                                 }

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { withAuthenticator } from '@aws-amplify/ui-react';
-import Insights from './Partials/Insights';
-import { Container, Row, Col, Tab, Button, Modal, Nav, Form, Card, Pagination }
+import InsightsFB from './Partials/InsightsFB';
+import InsightsInst from './Partials/InsightsInst';
+import { Container, Row, Col, Tab, Nav, Button, Card }
     from 'react-bootstrap';
-import { createStore, useGlobalState } from 'state-pool';
+import { createStore } from 'state-pool';
+import './Analytics.css'
 
 
 const store = createStore();
@@ -19,11 +21,11 @@ const Analytics = () => {
 
     useEffect(() => {
 
-        scriptFB();
-
+        scriptFB()
         if (loginFB === true && access_token === '') {
-            queryToken()
+            queryToken();
         }
+
 
         (async () => {
             try {
@@ -35,7 +37,7 @@ const Analytics = () => {
             }
         })()
 
-    }, []);
+    }, [loginFB]);
 
     function queryToken() {
 
@@ -62,7 +64,7 @@ const Analytics = () => {
                 appId: "801174264382809",
                 cookie: true,
                 xfbml: true,
-                version: 'v14.0'
+                version: 'v15.0'
             });
 
             window.FB.getLoginStatus(function (response) {
@@ -105,34 +107,47 @@ const Analytics = () => {
 
     }
 
-    if (loginFB === true && access_token === '') {
-        queryToken()
+    if (loginFB != false && access_token == '') {
+        queryToken();
     }
-
-    scriptFB();
 
     return (
         <div className='Analytics'>
             <Container>
                 <br />
                 <Row>
-                    <Col xs={6} md={4} lg={2}>
+                    <Col xs={6} md={4} lg={4} >
                         {loginFB === true ?
                             <p>FACEBOOK Connected</p>
                             :
                             <p>Out from FACEBOOK</p>
                         }
-                        <Col xs={3} md={5} lg={7} />
-                        <Col xs={6} md={3} lg={2} />
                     </Col>
+                    <Col xs={3} md={8} lg={8} />
                 </Row>
                 <br />
-                <Row>
-                    <Col xs={6} md={4} lg={2}>
-                        <Insights dataFromParent={[loginFB, access_token]}  />
-                    </Col>
-                    <Col xs={3} md={5} lg={7} />
-                    <Col xs={6} md={3} lg={2} />
+                <Row className='Insights'>
+                    <Tab.Container defaultActiveKey="facebook-insight">
+                        <Nav variant="pills" defaultActiveKey="facebook-insight">
+                            <Nav.Item>
+                                <Nav.Link className='facebook' eventKey="facebook-insight">Facebook</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link className='instagram' eventKey="instagram-insight">Instagram</Nav.Link>
+                            </Nav.Item>
+                        </Nav>
+                        <div className='socialM-content'>
+                            <Tab.Content>
+                                <Tab.Pane eventKey="facebook-insight">
+                                    <InsightsFB dataFromParent={[loginFB, access_token]} />
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="instagram-insight">
+                                    <InsightsInst dataFromParent={[loginFB, access_token]} />
+                                </Tab.Pane>
+                            </Tab.Content>
+                        </div>
+                    </Tab.Container>
+
                 </Row>
             </Container>
 

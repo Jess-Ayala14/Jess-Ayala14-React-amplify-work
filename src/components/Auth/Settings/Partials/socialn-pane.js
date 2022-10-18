@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-//import TwitterApi from 'twitter-v2'
+//import TwitterLogin from "react-twitter-login";
 import { Container, Row, Col, Tab, Button, Modal }
     from 'react-bootstrap';
 import { async } from 'rxjs';
 import fb_ins_logo from '../../../../storage/fb-ins.png';
 import tw_logo from '../../../../storage/twitter.png';
+
 
 
 const Socialn = () => {
@@ -16,16 +17,24 @@ const Socialn = () => {
     const handleShow1 = () => setShow1(true);
     const handleClose = () => setShow(false);
     const handleClose1 = () => setShow1(false);
+    const CONSUMER_KEY = 'VrMi173miqclmI3A6CS8fmOrG'
+    const CONSUMER_SECRET = 'Tv1Rm8PdtlTaNORw9uzRdtRyk9tkQY0c2MjOO4aKMPBsTtLfoK'
+
+
+    const authHandler = (err, data) => {
+        console.log(err, data);
+    };
+
+
     //const [isLoggedin, setIsLoggedin] = useState(false);
 
     useEffect(() => {
 
         scriptFB();
 
-        checkLoginStateFB();
+        //checkLoginStateFB();
 
-
-    }, []);
+    }, [loginFB]);
 
     //////////////////////////////////API FACEBOOK////////////////////////////////////////////////////
     const onLoginFB = () => {
@@ -34,7 +43,7 @@ const Socialn = () => {
             window.location.reload();
         },
             {
-                scope: "email, public_profile ,pages_show_list, pages_read_engagement, pages_manage_posts,  pages_read_user_content, instagram_basic, instagram_content_publish"
+                scope: "email, read_insights, pages_show_list, ads_management, business_management, instagram_basic, instagram_manage_insights, instagram_content_publish, pages_read_engagement, pages_manage_metadata, pages_read_user_content, pages_manage_posts, public_profile"
             }
         );
 
@@ -70,13 +79,13 @@ const Socialn = () => {
     }
 
     /////////////////////////////////////////////SCRIPT SDK //////////////////////////////////////////////////
-    const scriptFB = () => {
+    async function scriptFB() {
         window.fbAsyncInit = function () {
             window.FB.init({
                 appId: "801174264382809",
                 cookie: true,
                 xfbml: true,
-                version: 'v14.0'
+                version: 'v15.0'
             });
 
             window.FB.getLoginStatus(function (response) {
@@ -95,15 +104,16 @@ const Socialn = () => {
 
 
     }
+    scriptFB()
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
-    function logginTwit() {
-        const client = new TwitterApi('974707486769983490-quuU6MJmVj0IGKd57bwmxUgiyQyqUVw');
-    }
-*/
+    // Instantiate with desired auth type (here's Bearer v2 auth)
+
+
+
     return (
         <Tab.Pane eventKey="Social">
+            {console.log(loginFB)}
             <Container>
                 <div className='socialn-list'>
                     <Row className="justify-content-md-center">
@@ -177,8 +187,8 @@ const Socialn = () => {
                     <Button variant="secondary" onClick={handleClose1}>
                         Close
                     </Button>
-                    <Button variant="primary">
-                        Login Twitter
+                    <Button variant='Primary'>
+                        Login
                     </Button>
                 </Modal.Footer>
             </Modal>

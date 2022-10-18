@@ -1,0 +1,123 @@
+.center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+h6.user_welcoming {
+    text-transform: capitalize;
+    margin-top: .7rem;
+    margin-bottom: .5rem;
+    font-size: .85rem;
+}
+
+div.Analytics {
+    height: 100vh;
+    background-color: azure;
+}
+
+div.Analytics .card-body h4,
+p {
+    text-align: center;
+    text-transform: none;
+}
+
+div.Analytics .Insights .socialM-content {
+    height: 65vh;
+    background-color: #f6f8fa;
+    border-radius: 5px;
+    border-color: #85b2f5;
+    border-style: ridge;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+div.Analytics .Insights div.nav {
+    padding: 3px;
+}
+
+div.Analytics .Insights .nav-item a.nav-link.facebook {
+    color: #0d6efd;
+    background-color: white;
+    border-radius: 3px;
+    border-color: #0d6efd;
+    border-style: ridge;
+
+}
+
+div.Analytics .Insights .nav-item a.nav-link.instagram {
+    color: #e86aed;
+    background-color: white;
+    border-radius: 3px;
+    border-color: #e86aed;
+    border-style: ridge;
+
+}
+
+div.Analytics .Insights a.nav-link.facebook.active {
+    color: white;
+    background-color: #5f9af1;
+}
+
+div.Analytics .Insights a.nav-link.instagram.active {
+    color: white;
+    background-color: #e86aed;
+}
+
+div.Analytics .Insights .socialM-content .card-insight.row{
+    padding-top: 200px;
+}
+
+div.Analytics .Insights .socialM-content .card-insightFB {
+    border: 3px solid #5f9af1;
+}
+
+div.Analytics .Insights .socialM-content .card-insightFB .card-title {
+    background: #5f9af1;
+    padding-bottom: 7px;
+    padding-left: 7px;
+    text-transform: capitalize;
+    color: #f9fafb;
+}
+
+
+div.Analytics .Insights .socialM-content .card-insightInst {
+    border: 3px solid #e86aed;
+}
+
+div.Analytics .Insights .socialM-content .card-insightInst .little-text{
+    font-size: 12px;
+}
+
+div.Analytics .Insights .socialM-content .card-insightInst .card-title {
+    background: #e86aed;
+    padding-bottom: 7px;
+    padding-left: 7px;
+    text-transform: capitalize;
+    color: #f9fafb;
+}
+
+
+div.Analytics .Insights .socialM-content .card-insightInst .btn-instagram {
+    color: #fff;
+    background-color: #e86aed;
+    border-color: #e86aed;
+}

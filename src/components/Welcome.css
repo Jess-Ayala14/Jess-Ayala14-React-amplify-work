@@ -1,0 +1,56 @@
+.center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+div.Welcome {
+    height: 100vh;
+    background-color: #0b0b2a;
+}
+
+div.Welcome .container {
+    padding-top: 250px;
+}
+
+div.Welcome .container .img-welcome {
+    height: 255px;
+    width: auto;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    div.Welcome .container .img-welcome {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+div.Welcome .container h3.title-welcome {
+    color: #eeeeee;
+}
+
+div.Welcome .container p.text-welcome {
+    color: #eeeeee;
+}
+
+div.Welcome .container a.text-welcome {
+    color: #eeeeee;
+}

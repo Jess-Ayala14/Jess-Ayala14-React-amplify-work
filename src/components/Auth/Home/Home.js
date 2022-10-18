@@ -16,7 +16,7 @@ import { async, windowWhen } from 'rxjs';
 const store = createStore();
 store.setState("token", '');
 
-const initialFormState = { name: '', about: '', image: '' };
+const initialFormState = { name: '', about: '', image: '', phone: '' };
 const initialPostState = { description: '', picture: '', fb_checkbox: false, inst_checkbox: false };
 
 const Home = () => {
@@ -31,6 +31,7 @@ const Home = () => {
     const [loginFB, setlogin] = useState(false);
     const [access_token, savingtoken] = store.useState("token")
     const [img, setImg] = useState();
+    const [img_profile, setImg_profile] = useState();
 
     useEffect(() => {
         fetchBusiness();
@@ -186,11 +187,11 @@ const Home = () => {
                             function (response) {
                                 console.log(response)
 
-                                if (response['id']!=='') {
-                                    
+                                if (response['id'] !== '') {
+
                                     alert("Inst: Publication was successful")
                                     window.location.reload();
-                                    media_publish(insta_id,response.id)
+                                    media_publish(insta_id, response.id)
                                 }
                                 else {
                                     alert("Inst: ", toString(response))
@@ -312,19 +313,23 @@ const Home = () => {
             const image = await Storage.get(formData.image);
             formData.image = image;
         }
+
         setBusiness([...business, formData]);
         setFormData(initialFormState);
         window.location.reload();
     }
 
     async function onChange(e) {
-        if (!e.target.files[0]) return
-        const file = e.target.files[0];
-        setFormData({ ...formData, image: file.name });
+        if (!e.target.files[0].name) return
+        setFormData({ ...formData, "image": e.target.files[0].name });
+        const [file] = e.target.files;
+        setImg_profile(URL.createObjectURL(file));
         Storage.configure({ level: 'private' })
-        await Storage.put("Profile/" + file.name, file, {
-            contentType: "image/png"
-        });
+        await Storage.put("Profile/" + e.target.files[0].name, file,
+            {
+                contentType: "image/png"
+            });
+
         fetchBusiness();
     }
 
@@ -364,7 +369,7 @@ const Home = () => {
                                             <Card.Text>
                                                 <img className='profile_img' src={business.image} alt="profile" />
                                             </Card.Text>
-                                            <Card.Subtitle>{business.about}</Card.Subtitle>
+                                            <Card.Subtitle className='text-left'>{business.about}</Card.Subtitle>
                                         </Card.Body>
                                     ))}
                                 </Card>
@@ -385,9 +390,9 @@ const Home = () => {
                             </Col>
                         </Row>
                         <br />
-                        <Row>
+                        <Row className='row-tab-md-lg'>
                             <Tab.Container id="left-tabs-example" defaultActiveKey="posted">
-                                <Col sm={3} md={3} lg={2}>
+                                <Col className='hide' md={3} lg={2}>
                                     <Nav variant="pills" className="flex-column">
                                         <Nav.Item>
                                             <Nav.Link eventKey="posted">Posted</Nav.Link>
@@ -400,7 +405,7 @@ const Home = () => {
                                         </Nav.Item>
                                     </Nav>
                                 </Col>
-                                <Col className="Home-col-tab" sm={9} md={9} lg={8}>
+                                <Col className="Home-col-tab" xs={0} sm={9} md={9} lg={8}>
                                     <Tab.Content>
                                         <Posted dataFromParent={[loginFB, access_token]} />
                                         <Files dataFromParent={loginFB} />
@@ -409,10 +414,45 @@ const Home = () => {
                                 </Col>
                             </Tab.Container>
                         </Row>
+                        <div className='row-tab-xs-xl'>
+                            <Tab.Container defaultActiveKey="posted">
+                                <Row>
+                                    <Nav variant="tabs">
+                                        <Col xs={1} sm={1} />
+                                        <Col xs={3} sm={3}>
+                                            <Nav.Item>
+                                                <Nav.Link eventKey="posted">Posted</Nav.Link>
+                                            </Nav.Item>
+                                        </Col>
+                                        <Col xs={3} sm={3}>
+                                            <Nav.Item>
+                                                <Nav.Link eventKey="files">Files</Nav.Link>
+                                            </Nav.Item>
+                                        </Col>
+                                        <Col xs={3} sm={3}>
+                                            <Nav.Item>
+                                                <Nav.Link eventKey="drafts">Draft</Nav.Link>
+                                            </Nav.Item>
+                                        </Col>
+                                    </Nav>
+                                </Row>
+                                <Row>
+                                    <Col className="Home-col-tab" xs={12} sm={12} md={9} lg={8}>
+                                        <Tab.Content>
+                                            <Posted dataFromParent={[loginFB, access_token]} />
+                                            <Files dataFromParent={loginFB} />
+                                            <Drafts dataFromParent={loginFB} />
+                                        </Tab.Content>
+                                    </Col>
+                                </Row>
+                            </Tab.Container>
+                        </div>
+
+
                     </div>
                 </Container>
                 :
-                <Container>
+                <Container className="business_form">
                     <div>
                         <br />
                         <Row>
@@ -459,7 +499,8 @@ const Home = () => {
                                                                     <Form.Control type="tel" onChange={e => setFormData({ ...formData, 'phone': e.target.value })}
                                                                         placeholder="Enter a Phone Number" value={formData.phone} />
                                                                     <br />
-                                                                    <Form.Control type="file" onChange={onChange} />
+                                                                    <Form.Control type="file" onChange={onChange} required={true} />
+                                                                    <img src={img_profile} alt="" />
                                                                     <br />
                                                                     <Button onClick={createBusiness}>Save Data</Button>
                                                                 </Form>

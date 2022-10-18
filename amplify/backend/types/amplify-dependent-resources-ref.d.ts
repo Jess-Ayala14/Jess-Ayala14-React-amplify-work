@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
-        "bootstrapreact491165cb": {
+        "alimediatools8a8d7ad7": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "UserPoolId": "string",
@@ -11,13 +11,13 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "api": {
-        "bootstrapreactwork": {
+        "alimediatools": {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         }
     },
     "function": {
-        "S3Trigger651ff5bf": {
+        "S3Trigger6218625d": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
@@ -25,7 +25,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "storage": {
-        "s3e9e060e7": {
+        "s303a4ba8f": {
             "BucketName": "string",
             "Region": "string"
         }

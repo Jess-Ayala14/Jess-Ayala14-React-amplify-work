@@ -8,19 +8,24 @@ import {
     createBusiness as createBusinessMutation,
     updateBusiness as updateBusinessMutation
 } from '../../../../graphql/mutations';
+import { async } from 'rxjs';
 
 
-const initialFormState = { name: '', about: '', phone: '' }
+const initialFormState = { name: '', about: '', image: '', phone: '' }
 
 const Bussiness = () => {
 
+    const [loginFB, setlogin] = useState(false);
+    const [formData, setFormData] = useState(initialFormState);
     const [hideLightbox, setHideLightbox] = useState(true);
     const [business, setBusiness] = useState([]);
-    const [formData, setFormData] = useState(initialFormState);
+    const [img_profile, setImg_profile] = useState();
 
     useEffect(() => {
 
         fetchBusiness();
+
+        //scriptFB();
 
         (async () => {
             try {
@@ -31,7 +36,53 @@ const Bussiness = () => {
                 setState(null)
             }
         })()
-    }, []);
+    }, [loginFB]);
+
+    function scriptFB() {
+        window.fbAsyncInit = function () {
+            window.FB.init({
+                appId: "801174264382809",
+                cookie: true,
+                xfbml: true,
+                version: 'v15.0'
+            });
+
+            window.FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+        };
+
+        function statusChangeCallback(response) {
+            console.log(response)
+            if (response.status === 'connected') {
+                console.log('Logged in and authenticated');
+                setlogin(true);
+
+                // testAPI();
+            } else {
+                console.log('Not authenticated');
+                setlogin(false);
+
+            }
+        }
+
+        function checkLoginState() {
+            window.FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+
+        }
+
+        // load facebook sdk script
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v14.0&appId=801174264382809&autoLogAppEvents=1";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+    }
 
     async function fetchBusiness() {
         const apiData = await API.graphql({ query: listBusinesses });
@@ -78,6 +129,49 @@ const Bussiness = () => {
         window.location.reload();
     }
 
+    async function sync_fb() {
+
+        const apiData = await API.graphql({ query: listBusinesses });
+        const BusinessFromAPI = apiData.data.listBusinesses.items;
+        /* BusinessFromAPI[0]['id'];
+        BusinessFromAPI[0]['website'];
+         BusinessFromAPI[0]['about']
+        BusinessFromAPI[0]['phone'];
+        Query
+        me?fields=website,description,phone
+        Update
+        me?website=https://linktr.ee/UrComfortZ0ne&about=This is an Entertaiment Page from a Streamer&phone=+526562413784
+        me?website=BusinessFromAPI[0]['name']&about=BusinessFromAPI[0]['about']&phone=BusinessFromAPI[0]['phone'];
+        */
+
+        window.FB.api(
+            "me?fields=accounts{access_token}",
+            "GET",
+            function (response) {
+                // Insert your code here
+                response = response["accounts"]['data'][0]['access_token']
+                post_sync(response)
+            }
+        );
+
+        function post_sync(access_token) {
+
+            window.FB.api(
+                "me?about=" + BusinessFromAPI[0]['about'] + "&phone=" + BusinessFromAPI[0]['phone'],
+                "POST",
+                {
+                    access_token: access_token
+                },
+                //{ "about": BusinessFromAPI[0]['about'], "phone": BusinessFromAPI[0]['phone'] },
+                function (response) {
+                    console.log(response)
+                    alert("Facebook Sync Success: " + response['success'])
+                }
+            );
+        }
+
+    }
+
     async function updateAboutB() {
         const apiData = await API.graphql({ query: listBusinesses });
         const BusinessFromAPI = apiData.data.listBusinesses.items;
@@ -117,11 +211,16 @@ const Bussiness = () => {
     }
 
     async function onChange(e) {
-        if (!e.target.files[0]) return
-        const file = e.target.files[0];
-        setFormData({ ...formData, image: file.name });
+        if (!e.target.files[0].name) return
+        setFormData({ ...formData, "image": e.target.files[0].name });
+        const [file] = e.target.files;
+        setImg_profile(URL.createObjectURL(file));
         Storage.configure({ level: 'private' })
-        await Storage.put(file.name, file);
+        await Storage.put("Profile/" + e.target.files[0].name, file,
+            {
+                contentType: "image/png"
+            });
+
         fetchBusiness();
     }
 
@@ -131,7 +230,9 @@ const Bussiness = () => {
     if (!state) return <AmplifyLoadingSpinner />
 
     return (
+
         <Tab.Pane eventKey="business">
+            {console.log(loginFB)}
             <Container>
                 <div className='business-list'>
                     <Row>
@@ -155,7 +256,8 @@ const Bussiness = () => {
                                                     <Form.Control type="tel" onChange={e => setFormData({ ...formData, 'phone': e.target.value })}
                                                         placeholder="Enter a Phone  Number" value={formData.phone} />
                                                     <br />
-                                                    <Form.Control type="file" onChange={onChange} />
+                                                    <Form.Control type="file" name='picture' onChange={onChange} required={true} />
+                                                    <img src={img_profile} alt="" />
                                                     <br />
                                                     <Button onClick={createBusiness}>Save Data</Button>
                                                 </Col>
@@ -174,9 +276,15 @@ const Bussiness = () => {
                                                         <br />
                                                         <h6>Phone: </h6><p>{!business.phone ? 'No phone' : business.phone}</p>
                                                     </Col>
-                                                    <Col md="7"></Col>
-                                                    <Col md="3">
+                                                    <Col md="6"></Col>
+                                                    <Col md="2 text-right">
+                                                        <br />
                                                         <Card.Link className='text-right' ><a href='#bussiness' onClick={() => setHideLightbox(false)}>Edit</a></Card.Link>
+                                                    </Col>
+                                                    <Col md="3">
+                                                        <Button variant='primary' onClick={sync_fb} >
+                                                            Sync FB
+                                                        </Button>
                                                     </Col>
                                                 </Row>
                                                 <div className={`${hideLightbox ? "hide-lightbox" : "ligthbox"}`}>
@@ -187,7 +295,6 @@ const Bussiness = () => {
                                                                     <Form.Label><h4>Update Info</h4></Form.Label>
                                                                 </Row>
                                                                 <Row className="justify-content-center">
-
                                                                     <Col xs="6">
                                                                         <Form.Control type='text'
                                                                             onChange={e => setFormData({ ...formData, 'name': e.target.value })}
@@ -197,9 +304,7 @@ const Bussiness = () => {
                                                                     </Col>
                                                                     <Col xs="3">
                                                                         <Button variant="light" onClick={updateNameB}>Update</Button>
-
                                                                     </Col>
-
                                                                 </Row>
                                                             </Form>
                                                             <br />
