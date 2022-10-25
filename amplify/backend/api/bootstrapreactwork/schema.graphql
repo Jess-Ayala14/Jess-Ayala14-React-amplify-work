@@ -4,7 +4,15 @@ type Business @model @auth(rules: [{ allow: owner, operations: [create, read, up
   about: String
   phone: String
   address: String
-  user_Id: String
   image: String
-  facebook_API: String
+  website: String
+  multiposts: [Multiposts] @hasMany
+}
+
+type Multiposts @model @auth(rules: [{ allow: owner, operations: [create, read, update, delete] }]){
+  id: ID!
+  title: String
+  fb_id: String
+  inst_id: String
+  twit_id: String
 }

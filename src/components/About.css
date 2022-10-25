@@ -24,17 +24,25 @@
 
 div.About {
     height: 100vh;
-    background-color: #0b0b2a;
+    z-index: -1;
 }
 
-div.About .container{
+@keyframes move-about{
+    0% { opacity: 0; left: 0px; top: -135px;}
+    100% {opacity: 1; left: 0px; top: 0px;}
+}
+
+div.About .container.about{
+    position: relative;
     padding-top: 135px;
+    animation: 
+    move-about 4s;
 }
 
-div.About .container h3.title-about {
+div.About .container.about h3.title-about {
     color: #eeeeee;
 }
 
-div.About .container p.text-about {
+div.About .container.about p.text-about {
     color: #eeeeee;
 }

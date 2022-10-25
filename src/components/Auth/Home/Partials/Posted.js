@@ -14,19 +14,19 @@ export const Posted = (data) => {
     const [FBposted, setpostedFB] = store.useState("FBposted");
     const [InsPosted, setpostedIns] = store.useState("InsPosted");
     const APICALLFB = "me?fields=posts{id,message,full_picture,created_time,shares,reactions}";
-    const APICALLIns = "me?fields=instagram_business_account{media{permalink,media_type,caption,media_url}}"
+    const APICALLIns = "me?fields=instagram_business_account{media{permalink,media_type,caption,media_url,children{id,media_url}}}"
 
     // me?fields=instagram_business_account{media{id,media_type,caption,media_url}}  
     //me?fields=instagram_business_account{id,username,biography}
     //17841406287465765?fields=id,username,biography
 
     useEffect(() => {
-        
+
         if (loginFB !== false) {
             AllPosts();
         }
 
-    }, []);
+    }, [ACCESS_TOKEN]);
 
 
 
@@ -90,7 +90,7 @@ export const Posted = (data) => {
 
             const content = Object.keys(media).map(key => {
                 return (
-                    [media[key].permalink, media[key].caption, media[key].media_url]
+                    [media[key].permalink, media[key].caption, media[key].media_url, media[key].media_type]
                 );
             })
             return content
@@ -107,10 +107,10 @@ export const Posted = (data) => {
 
         const listItems = FBposted.map((post) =>
             <Row>
-                <Col md={2} lg={3} />
-                <Col md={3} lg={3}>
+                <Col xs={0} sm={1} md={2} lg={2} />
+                <Col xs={12} sm={10} md={10} lg={8}>
                     <br />
-                    <Card style={{ width: '18rem' }}>
+                    <Card>
                         <Card.Title className='text-left'><a href={'https://www.facebook.com/' + post[0]} target="_blank">Go to post</a></Card.Title>
                         <Card.Body>
                             <Card.Text className='text-justify'>
@@ -123,7 +123,7 @@ export const Posted = (data) => {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col md={2} lg={3} />
+                <Col xs={0} sm={1} md={2} lg={2} />
             </Row>
         );
 
@@ -137,23 +137,27 @@ export const Posted = (data) => {
         const InsPosted = props.posted;
         const listItems = InsPosted.map((post) =>
             <Row>
-                <Col md={2} lg={3} />
-                <Col md={3} lg={3}>
+                <Col xs={0} sm={1} md={2} lg={2} />
+                <Col xs={12} sm={10} md={8} lg={8}>
                     <br />
-                    <Card className='inst' style={{ width: '18rem' }}>
+                    <Card className='inst'>
                         <Card.Title className='text-left inst'><a href={post[0]} target="_blank">Go to post</a></Card.Title>
                         <Card.Body>
                             <Card.Text className='text-justify'>
                                 {post[1]}
                             </Card.Text>
                             <div className='text-center'>
-                                <img src={post[2]} />
-                            </div>
+                                {post[3] === 'VIDEO' ?
+                                    <video src={post[2]} controls></video>
+                                    :
+                                    <img src={post[2]} />
+                                }
 
+                            </div>
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col md={2} lg={3} />
+                <Col xs={0} sm={1} md={2} lg={2} />
             </Row>
         );
 
@@ -185,18 +189,16 @@ export const Posted = (data) => {
                                 {loginFB == true
                                     ?
                                     <Row>
-                                        <Col className="center">
-                                            <br />
-                                            <FBPost posted={FBposted} />
-                                        </Col>
+                                        <br />
+                                        <FBPost posted={FBposted} />
                                     </Row>
                                     :
                                     <Row>
                                         <Col className="center">
                                             <Row>
                                                 <br />
-                                                <Col xs={1} md={2} lg={3} />
-                                                <Col xs={10} md={3} lg={3}>
+                                                <Col xs={2} md={3} lg={3} />
+                                                <Col xs={8} md={6} lg={6}>
                                                     <br />
                                                     <Card>
                                                         <Card.Body className='text-center'>
@@ -207,7 +209,7 @@ export const Posted = (data) => {
                                                         </Card.Body>
                                                     </Card>
                                                 </Col>
-                                                <Col xs={1} md={2} lg={3} />
+                                                <Col xs={2} md={3} lg={3} />
                                             </Row>                            </Col>
                                     </Row>
                                 }
@@ -216,20 +218,18 @@ export const Posted = (data) => {
                                 {loginFB == true
                                     ?
                                     <Row>
-                                        <Col className="center">
-                                            <br />
-                                            <InsPost posted={InsPosted} />
-                                        </Col>
+                                        <br />
+                                        <InsPost posted={InsPosted} />
                                     </Row>
                                     :
                                     <Row>
                                         <Col className="center">
                                             <Row>
                                                 <br />
-                                                <Col xs={1} md={2} lg={3} />
-                                                <Col xs={10} md={3} lg={3}>
+                                                <Col xs={2} md={3} lg={3} />
+                                                <Col xs={8} md={6} lg={6}>
                                                     <br />
-                                                    <Card className="inst" style={{ width: '18rem' }}>
+                                                    <Card className="inst">
                                                         <Card.Body className='text-center'>
                                                             <Card.Text>
                                                                 Please Authorize Instagram
@@ -238,7 +238,7 @@ export const Posted = (data) => {
                                                         </Card.Body>
                                                     </Card>
                                                 </Col>
-                                                <Col xs={1} md={2} lg={3} />
+                                                <Col xs={2} md={3} lg={3} />
                                             </Row>                            </Col>
                                     </Row>
                                 }

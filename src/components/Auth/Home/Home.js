@@ -30,7 +30,8 @@ const Home = () => {
     const handleShow = () => setShow(true);
     const [loginFB, setlogin] = useState(false);
     const [access_token, savingtoken] = store.useState("token")
-    const [img, setImg] = useState();
+    const [img_form, setImg] = useState();
+    const [video_form, setVideo] = useState();
     const [img_profile, setImg_profile] = useState();
 
     useEffect(() => {
@@ -53,7 +54,7 @@ const Home = () => {
             }
         })()
 
-    }, []);
+    }, [loginFB]);
 
     //////////////////////////////////API FACEBOOK////////////////////////////////////////////////////
 
@@ -86,6 +87,7 @@ const Home = () => {
         newPostData.fb_checkbox = '';
         newPostData.inst_checkbox = ''
         setImg('');
+        setVideo('');
 
     }
 
@@ -111,7 +113,7 @@ const Home = () => {
                         //status message
                         message: newPostData.description,
                         //absolute url to the image, must be public
-                        url: urlImg,
+                        url: 'https://alimediatoolsoct73015-dev.s3.amazonaws.com/private/us-east-1%3A862cf919-44b1-4a17-890e-abaaa50f919c/temp/among+us.mp4',
 
                     };
 
@@ -162,8 +164,8 @@ const Home = () => {
                         //status message
                         caption: newPostData.description,
                         //absolute url to the image, must be public
-                        image_url: urlImg,
-
+                        video_url: 'https://alimediatoolsoct73015-dev.s3.amazonaws.com/private/us-east-1%3A862cf919-44b1-4a17-890e-abaaa50f919c/temp/among+us.mp4',
+                        media_type: 'VIDEO'
                     };
 
                     window.FB.api(
@@ -335,14 +337,19 @@ const Home = () => {
 
     //e => setFormData1({ ...newPostData, 'description': e.target.value })}
     async function onImageChange(e) {
+        const ImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+        const videoTypes = ['video/mp4', 'video/mkv'];
         if (!e.target.files[0].name) return
         setFormData1({ ...newPostData, "picture": e.target.value });
         const [file] = e.target.files;
-        setImg(URL.createObjectURL(file));
+        if (ImageTypes.includes(file["type"]))
+            setImg(URL.createObjectURL(file))
+        else if (videoTypes.includes(file["type"]))
+            setVideo(URL.createObjectURL(file))
+            /*
         Storage.configure({ level: 'private' })
-        await Storage.put("temp/" + e.target.files[0].name, file, {
-            contentType: "image/png"
-        });
+        await Storage.put("temp/" + e.target.files[0].name, file);
+        */
     }
 
     const Table = () => {
@@ -416,7 +423,7 @@ const Home = () => {
                         </Row>
                         <div className='row-tab-xs-xl'>
                             <Tab.Container defaultActiveKey="posted">
-                                <Row>
+                                <Row className='responsive'>
                                     <Nav variant="tabs">
                                         <Col xs={1} sm={1} />
                                         <Col xs={3} sm={3}>
@@ -436,7 +443,7 @@ const Home = () => {
                                         </Col>
                                     </Nav>
                                 </Row>
-                                <Row>
+                                <Row className='responsive-content'>
                                     <Col className="Home-col-tab" xs={12} sm={12} md={9} lg={8}>
                                         <Tab.Content>
                                             <Posted dataFromParent={[loginFB, access_token]} />
@@ -572,7 +579,16 @@ const Home = () => {
                                     <Form.Label>Select Image</Form.Label>
                                     <Form.Control type="file" name='picture' onChange={onImageChange} value={newPostData.picture} required={true} />
                                     <br />
-                                    <img src={img} alt="" />
+                                    {img_form ?
+                                        <img src={img_form} alt="" />
+                                        :
+                                        <></>
+                                    }
+                                    {video_form ?
+                                        <video src={video_form} controls alt="" />
+                                        :
+                                        <></>
+                                    }
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                                     <Form.Label>Enter a Description</Form.Label>

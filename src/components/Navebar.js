@@ -20,14 +20,10 @@ export default class Navebar extends Component {
 
     }
 
-
-
     render() {
 
-
-
         return (
-            <Navbar bg="primary" variant="dark" expand="lg">
+            <Navbar className='Ali-navbar' bg="primary" variant="dark" expand="lg">
                 <Container>
                     {!this.props.auth.isAuthenticated  && (
                         <Navbar.Brand href="/">Ali-Media</Navbar.Brand>

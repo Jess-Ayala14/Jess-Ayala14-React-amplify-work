@@ -23,6 +23,9 @@
           "deploymentBucketName": "amplify-alimediatools-dev-73015-deployment",
           "s3Key": "amplify-builds/S3Trigger6218625d-6e447556314873536779-build.zip"
         }
+      },
+      "api": {
+        "bootstrapreactwork": {}
       }
     }
   }

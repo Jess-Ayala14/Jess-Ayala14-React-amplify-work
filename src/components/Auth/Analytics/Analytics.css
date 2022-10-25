@@ -103,7 +103,8 @@ div.Analytics .Insights .socialM-content .card-insightInst {
     border: 3px solid #e86aed;
 }
 
-div.Analytics .Insights .socialM-content .card-insightInst .little-text{
+div.Analytics .Insights .socialM-content .card-insightInst .little-text,
+div.Analytics .Insights .socialM-content .card-insightFB .little-text{
     font-size: 12px;
 }
 

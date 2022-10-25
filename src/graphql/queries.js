@@ -9,10 +9,22 @@ export const getBusiness = /* GraphQL */ `
       about
       phone
       address
-      user_Id
       image
       website
-      facebook_API
+      multiposts {
+        items {
+          id
+          title
+          fb_id
+          inst_id
+          twit_id
+          createdAt
+          updatedAt
+          businessMultipostsId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -32,12 +44,50 @@ export const listBusinesses = /* GraphQL */ `
         about
         phone
         address
-        user_Id
         image
         website
-        facebook_API
+        multiposts {
+          nextToken
+        }
         createdAt
         updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getMultiposts = /* GraphQL */ `
+  query GetMultiposts($id: ID!) {
+    getMultiposts(id: $id) {
+      id
+      title
+      fb_id
+      inst_id
+      twit_id
+      createdAt
+      updatedAt
+      businessMultipostsId
+      owner
+    }
+  }
+`;
+export const listMultiposts = /* GraphQL */ `
+  query ListMultiposts(
+    $filter: ModelMultipostsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMultiposts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        fb_id
+        inst_id
+        twit_id
+        createdAt
+        updatedAt
+        businessMultipostsId
         owner
       }
       nextToken
