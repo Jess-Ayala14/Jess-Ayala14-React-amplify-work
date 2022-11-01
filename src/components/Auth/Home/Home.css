@@ -217,24 +217,24 @@ div.Home .business_form .card-body form img {
 
 @media only screen and (max-width: 820px) {
     .Home-col-tab .socialM-content .card .card-body img {
-        width: 310px;
+        width: 250px;
         height: auto;
     }
 
     .Home-col-tab .socialM-content .card .card-body video {
-        width: 310px;
+        width: 250px;
         height: auto;
     }
 }
 
 @media only screen and (min-width: 821px) and (max-width: 1920px) {
     .Home-col-tab .socialM-content .card .card-body img {
-        width: 275px;
+        width: 225px;
         height: auto;
     }
 
     .Home-col-tab .socialM-content .card .card-body video {
-        width: 275px;
+        width: 225px;
         height: auto;
     }
 }

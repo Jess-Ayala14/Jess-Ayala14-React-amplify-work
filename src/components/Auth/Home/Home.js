@@ -10,8 +10,8 @@ import './Home.css';
 import { listBusinesses } from '../../../graphql/queries';
 import { createBusiness as createBusinessMutation }
     from '../../../graphql/mutations';
-import { createStore, useGlobalState } from 'state-pool';
-import { async, windowWhen } from 'rxjs';
+import { createStore } from 'state-pool';
+
 
 const store = createStore();
 store.setState("token", '');
@@ -101,55 +101,111 @@ const Home = () => {
 
             const split = newPostData.picture.split("fakepath\\");
             newPostData.picture = split[1];
+            const new_split = newPostData.picture.split(".");
+            const extension = new_split[1];
+
+            console.log(newPostData.picture, ' ', extension)
+
             Storage.configure({ level: 'private' })
             const urlImg = await Storage.get('temp/' + newPostData.picture);
 
-
             if (newPostData.fb_checkbox === true) {
+
                 function fbPosting() {
-                    var params = {
-                        //Page Token with publish_pages (to post as Page)
-                        access_token: access_token,
-                        //status message
-                        message: newPostData.description,
-                        //absolute url to the image, must be public
-                        url: 'https://alimediatoolsoct73015-dev.s3.amazonaws.com/private/us-east-1%3A862cf919-44b1-4a17-890e-abaaa50f919c/temp/among+us.mp4',
+                    if (extension === 'gif' || extension === 'jpeg' || extension === 'jpg' || extension === 'png') {
+                        console.log('picture')
 
-                    };
+                        var params = {
+                            //Page Token with publish_pages (to post as Page)
+                            access_token: access_token,
+                            //status message
+                            message: newPostData.description,
+                            //absolute url to the image, must be public
+                            url: urlImg,
 
-                    window.FB.api(
-                        "me?fields=id",
-                        "GET",
-                        {
-                            access_token: access_token
-                        },
-                        function (response) {
-                            // Insert your code here
-                            post(response.id)
+                        };
 
-                        }
-                    );
-
-                    function post(page_id) {
                         window.FB.api(
-                            page_id + '/photos?',
-                            'POST',
-                            params,
+                            "me?fields=id",
+                            "GET",
+                            {
+                                access_token: access_token
+                            },
                             function (response) {
+                                // Insert your code here
+                                post_picture(response.id)
 
-                                console.log(urlImg, response)
-                                if (!response.error) {
-                                    alert("FB: Publication was successful")
-                                    window.location.reload();
-                                }
-                                else {
-                                    alert("FB: ", toString(response.error.message))
-                                }
                             }
                         );
 
-                    }
+                        function post_picture(page_id) {
+                            window.FB.api(
+                                page_id + '/photos?',
+                                'POST',
+                                params,
+                                function (response) {
 
+                                    console.log(urlImg, response)
+                                    if (!response.error) {
+                                        setTimeout(function () {
+                                            alert("FB: Publication was successful")
+                                            window.location.reload();
+                                        }, 7000)
+                                    }
+                                    else {
+                                        alert("FB: Publication was successful")
+                                    }
+                                }
+                            );
+
+                        }
+                    }
+                    else if (extension === 'mp4' || extension === 'mkv') {
+                        console.log('video')
+                        var params = {
+                            //Page Token with publish_pages (to post as Page)
+                            access_token: access_token,
+                            //status message
+                            description: newPostData.description,
+                            //absolute url to the image, must be public
+                            file_url: urlImg,
+
+                        };
+
+                        window.FB.api(
+                            "me?fields=id",
+                            "GET",
+                            {
+                                access_token: access_token
+                            },
+                            function (response) {
+                                // Insert your code here
+                                post_video(response.id)
+
+                            }
+                        );
+
+                        function post_video(page_id) {
+                            window.FB.api(
+                                page_id + '/videos?',
+                                'POST',
+                                params,
+                                function (response) {
+
+                                    console.log(urlImg, response)
+                                    if (!response.error) {
+                                        setTimeout(function () {
+                                            alert("FB: Publication was successful")
+                                            window.location.reload();
+                                        }, 7000)
+                                    }
+                                    else {
+                                        alert("FB Error: Publication was Unsuccesful")
+                                    }
+                                }
+                            );
+                        }
+                    }
                 }
 
                 fbPosting(urlImg);
@@ -157,16 +213,34 @@ const Home = () => {
 
 
             if (newPostData.inst_checkbox === true) {
-                function instPosting() {
-                    var params = {
+
+                var params = ''
+
+                if (extension === 'gif' || extension === 'jpeg' || extension === 'jpg' || extension === 'png') {
+                    console.log('picture')
+                    params = {
                         //Page Token with publish_pages (to post as Page)
-                        //access_token: access_token,
+                        access_token: access_token,
                         //status message
                         caption: newPostData.description,
                         //absolute url to the image, must be public
-                        video_url: 'https://alimediatoolsoct73015-dev.s3.amazonaws.com/private/us-east-1%3A862cf919-44b1-4a17-890e-abaaa50f919c/temp/among+us.mp4',
+                        image_url: urlImg,
+
+                    };
+                }
+                else if (extension === 'mp4' || extension === 'mkv') {
+                    console.log('video')
+                    params = {
+                        //Page Token with publish_pages (to post as Page)
+                        access_token: access_token,
+                        //status message
+                        caption: newPostData.description,
+                        //absolute url to the image, must be public
+                        video_url: urlImg,
                         media_type: 'VIDEO'
                     };
+                }
+                function instPosting() {
 
                     window.FB.api(
                         "me?fields=instagram_business_account{id}",
@@ -186,14 +260,17 @@ const Home = () => {
                             insta_id + '/media',
                             'POST',
                             params,
-                            function (response) {
+                            async function (response) {
                                 console.log(response)
 
                                 if (response['id'] !== '') {
+                                    setTimeout(function () {
+                                        alert("Inst: Publication was successful")
+                                        media_publish(insta_id, response.id)
 
-                                    alert("Inst: Publication was successful")
-                                    window.location.reload();
-                                    media_publish(insta_id, response.id)
+                                    }, 10000)
+                                    
+
                                 }
                                 else {
                                     alert("Inst: ", toString(response))
@@ -207,9 +284,13 @@ const Home = () => {
                         window.FB.api(
                             insta_id + '/media_publish',
                             'POST',
+                            {
+                                access_token: access_token
+                            },
                             { "creation_id": id_media },
                             function (response) {
                                 console.log("Media Posted:", response)
+                                //window.location.reload();
                             }
                         );
 
@@ -217,7 +298,7 @@ const Home = () => {
                 }
                 instPosting(urlImg)
             }
-
+            
         }
         else {
             alert("Check at least one option")
@@ -234,7 +315,7 @@ const Home = () => {
                 appId: "801174264382809",
                 cookie: true,
                 xfbml: true,
-                version: 'v14.0'
+                version: 'v15.0'
             });
 
             window.FB.getLoginStatus(function (response) {
@@ -244,12 +325,6 @@ const Home = () => {
 
         };
 
-        function checkLoginState() {
-            window.FB.getLoginStatus(function (response) {
-                statusChangeCallback(response);
-            });
-
-        }
 
         function statusChangeCallback(response) {
             if (response.status === 'connected') {
@@ -346,10 +421,12 @@ const Home = () => {
             setImg(URL.createObjectURL(file))
         else if (videoTypes.includes(file["type"]))
             setVideo(URL.createObjectURL(file))
-            /*
+
         Storage.configure({ level: 'private' })
-        await Storage.put("temp/" + e.target.files[0].name, file);
-        */
+        await Storage.put("temp/" + e.target.files[0].name, file, {
+            contentType: "image/jpeg" || "image/png" || "video/mp4" || "video/mkv",
+        });
+
     }
 
     const Table = () => {

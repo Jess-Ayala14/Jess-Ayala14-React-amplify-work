@@ -13,7 +13,7 @@ export const Posted = (data) => {
     const ACCESS_TOKEN = data['dataFromParent'][1];
     const [FBposted, setpostedFB] = store.useState("FBposted");
     const [InsPosted, setpostedIns] = store.useState("InsPosted");
-    const APICALLFB = "me?fields=posts{id,message,full_picture,created_time,shares,reactions}";
+    const APICALLFB = "me?fields=posts{id,message,status_type,messages_tags,full_picture,attachments{media},created_time,shares,reactions}";
     const APICALLIns = "me?fields=instagram_business_account{media{permalink,media_type,caption,media_url,children{id,media_url}}}"
 
     // me?fields=instagram_business_account{media{id,media_type,caption,media_url}}  
@@ -70,10 +70,10 @@ export const Posted = (data) => {
         }
 
         function formatPostFB(posts) {
-
+            
             const content = Object.keys(posts).map(key => {
                 return (
-                    [posts[key].id, posts[key].message, posts[key].full_picture]
+                    [posts[key].id, posts[key].message, posts[key].status_type, posts[key].full_picture, posts[key].attachments, posts[key].messages_tags]
                 );
             })
             return content
@@ -87,7 +87,7 @@ export const Posted = (data) => {
 
 
         function formatPostIns(media) {
-
+                
             const content = Object.keys(media).map(key => {
                 return (
                     [media[key].permalink, media[key].caption, media[key].media_url, media[key].media_type]
@@ -117,7 +117,13 @@ export const Posted = (data) => {
                                 {post[1]}
                             </Card.Text>
                             <div className='text-center'>
-                                <img src={post[2]} />
+                                {post[2] == 'added_video' ?
+                                    <video controls muted>
+                                        <source src={post[4]['data'][0]['media']['source']}/>
+                                    </video>
+                                    :
+                                    <img src={post[3]} />
+                                }
                             </div>
 
                         </Card.Body>
@@ -147,8 +153,10 @@ export const Posted = (data) => {
                                 {post[1]}
                             </Card.Text>
                             <div className='text-center'>
-                                {post[3] === 'VIDEO' ?
-                                    <video src={post[2]} controls></video>
+                                {post[3] == 'VIDEO' ?
+                                    <video controls muted>
+                                        <source src={post[2]} />
+                                    </video>
                                     :
                                     <img src={post[2]} />
                                 }
@@ -186,7 +194,7 @@ export const Posted = (data) => {
                     <div className='socialM-content'>
                         <Tab.Content>
                             <Tab.Pane eventKey="facebook-posted">
-                                {loginFB == true
+                                {loginFB === true
                                     ?
                                     <Row>
                                         <br />
@@ -215,7 +223,7 @@ export const Posted = (data) => {
                                 }
                             </Tab.Pane>
                             <Tab.Pane eventKey="instagram-posted">
-                                {loginFB == true
+                                {loginFB === true
                                     ?
                                     <Row>
                                         <br />
