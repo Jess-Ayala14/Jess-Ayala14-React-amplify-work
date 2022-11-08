@@ -47,6 +47,13 @@ div.Welcome .container .card-welcome {
     border-width: 4px;
 }
 
+div.Welcome .container img{
+    width: 120px;
+    height: auto;
+    margin-top: -5px;
+    margin-bottom: -5px;
+}
+
 div.Welcome .container .img-welcome {
     height: 255px;
     width: auto;

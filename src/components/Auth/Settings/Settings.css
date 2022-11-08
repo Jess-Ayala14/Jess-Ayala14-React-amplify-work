@@ -56,6 +56,13 @@ div.settings {
     width: auto;
 }
 
+/*Modal update Picture */
+.settings-business.modal .modal-content .modal-body img {
+    height: 120px;
+    width: auto;
+}
+/*                         */
+
 .settings .settings-content .btn-primary {
     margin-top: 5px;
 }

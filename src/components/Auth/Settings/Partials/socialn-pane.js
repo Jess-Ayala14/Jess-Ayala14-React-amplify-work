@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react'
 //import TwitterLogin from "react-twitter-login";
 import { Container, Row, Col, Tab, Button, Modal }
     from 'react-bootstrap';
-import { async } from 'rxjs';
 import fb_ins_logo from '../../../../storage/fb-ins.png';
 import tw_logo from '../../../../storage/twitter.png';
-
+//import { Client } from "twitter-api-sdk";
 
 
 const Socialn = () => {
@@ -17,8 +16,8 @@ const Socialn = () => {
     const handleShow1 = () => setShow1(true);
     const handleClose = () => setShow(false);
     const handleClose1 = () => setShow1(false);
-    const CONSUMER_KEY = 'VrMi173miqclmI3A6CS8fmOrG'
-    const CONSUMER_SECRET = 'Tv1Rm8PdtlTaNORw9uzRdtRyk9tkQY0c2MjOO4aKMPBsTtLfoK'
+
+    //  const client = new Client(process.env.BEARER_TOKEN);
 
 
     const authHandler = (err, data) => {
@@ -109,7 +108,16 @@ const Socialn = () => {
 
     // Instantiate with desired auth type (here's Bearer v2 auth)
 
-
+    /*
+    async function main() {
+        const stream = client.tweets.sampleStream({
+          "tweet.fields": ["author_id"],
+        });
+        for await (const tweet of stream) {
+          console.log(tweet.data?.author_id);
+        }
+      }
+*/
 
     return (
         <Tab.Pane eventKey="Social">
@@ -187,7 +195,7 @@ const Socialn = () => {
                     <Button variant="secondary" onClick={handleClose1}>
                         Close
                     </Button>
-                    <Button variant='Primary'>
+                    <Button>
                         Login
                     </Button>
                 </Modal.Footer>

@@ -5,7 +5,8 @@ import { Navbar, Container, Nav, NavDropdown, Col }
     from 'react-bootstrap';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 //import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
-import './Navebar.css'
+import './Navebar.css';
+import logo_site from '../storage/logo.png'
 
 export default class Navebar extends Component {
     handleLogOut = async event => {
@@ -26,10 +27,10 @@ export default class Navebar extends Component {
             <Navbar className='Ali-navbar' bg="primary" variant="dark" expand="lg">
                 <Container>
                     {!this.props.auth.isAuthenticated  && (
-                        <Navbar.Brand href="/">Ali-Media</Navbar.Brand>
+                        <Navbar.Brand href="/"><img src={logo_site} /></Navbar.Brand>
                     )}
                     {this.props.auth.isAuthenticated && (
-                        <Navbar.Brand href="/Signup">Ali-Media</Navbar.Brand>
+                        <Navbar.Brand href="/Signup"><img src={logo_site} /></Navbar.Brand>
                     )}
                     <Navbar.Toggle />
                     <Navbar.Collapse id="basic-navbar-nav navbarScroll" >

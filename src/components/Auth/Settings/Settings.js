@@ -5,7 +5,6 @@ import Socialn from './Partials/socialn-pane';
 import { withAuthenticator } from '@aws-amplify/ui-react'
 import { Container, Row, Col, Tab, Nav, Button }
   from 'react-bootstrap';
-//import { MessengerChat } from "react-messenger-chat-plugin";
 import './Settings.css';
 import { async } from 'rxjs';
 
@@ -51,39 +50,6 @@ function Settings() {
               </Row>
             </Tab.Container>
           </Col>
-        </Row>
-        <Row>
-          {/*
-            <MessengerChat
-            pageId="2074988342714714"
-            language="sv_SE"
-            themeColor={"#000000"}
-            bottomSpacing={300}
-            loggedInGreeting="loggedInGreeting"
-            loggedOutGreeting="loggedOutGreeting"
-            greetingDialogDisplay={"show"}
-            debugMode={true}
-            onMessengerShow={() => {
-              console.log("onMessengerShow");
-            }}
-            onMessengerHide={() => {
-              console.log("onMessengerHide");
-            }}
-            onMessengerDialogShow={() => {
-              console.log("onMessengerDialogShow");
-            }}
-            onMessengerDialogHide={() => {
-              console.log("onMessengerDialogHide");
-            }}
-            onMessengerMounted={() => {
-              console.log("onMessengerMounted");
-            }}
-            onMessengerLoad={() => {
-              console.log("onMessengerLoad");
-            }}
-          /> */
-          }
-          
         </Row>
       </Container>
 

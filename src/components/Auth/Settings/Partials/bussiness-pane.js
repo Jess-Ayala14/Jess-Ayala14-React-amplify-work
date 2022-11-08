@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Auth, API, Storage } from 'aws-amplify';
 import { AmplifyLoadingSpinner } from '@aws-amplify/ui-react';
-import { Container, Row, Col, Tab, Card, Button, Form }
+import { Container, Row, Col, Tab, Card, Button, Form, Modal }
     from 'react-bootstrap';
 import { listBusinesses } from '../../../../graphql/queries';
 import {
@@ -12,14 +12,18 @@ import { async } from 'rxjs';
 
 
 const initialFormState = { name: '', about: '', image: '', phone: '' }
+const updateFormState = { profile: '' }
 
 const Bussiness = () => {
 
+    const [updatePic, setUpdate] = useState(updateFormState);
     const [loginFB, setlogin] = useState(false);
     const [formData, setFormData] = useState(initialFormState);
     const [hideLightbox, setHideLightbox] = useState(true);
     const [business, setBusiness] = useState([]);
     const [img_profile, setImg_profile] = useState();
+    const [showModal, setShow] = useState(false);
+    const handleShow = () => setShow(true);
 
     useEffect(() => {
 
@@ -224,15 +228,46 @@ const Bussiness = () => {
         fetchBusiness();
     }
 
+    async function onChangeUp(e) {
+        if (!e.target.files[0].name) return
+        setUpdate({ ...updatePic, "profile": e.target.files[0].name });
+        const [file] = e.target.files;
+        setImg_profile(URL.createObjectURL(file));
+
+        fetchBusiness();
+    }
+
+    async function saveNewPic() {
+        console.log(updatePic.profile)
+        if (!updatePic.profile) return;
+
+
+        //const [file] = e.target.files;
+
+        console.log("Inside")
+        /*
+        Storage.configure({ level: 'private' })
+        await Storage.put("Profile/" + e.target.files[0].name, file,
+            {
+                contentType: "image/png"
+            });*/
+
+    }
+
+    const handleClose = () => {
+        setShow(false);
+        updatePic.profile = '';
+        setImg_profile('');
+    }
+
     let [state, setState] = useState(null)
 
 
     if (!state) return <AmplifyLoadingSpinner />
 
     return (
-
         <Tab.Pane eventKey="business">
-            {console.log(loginFB)}
+            {/*console.log(loginFB)*/}
             <Container>
                 <div className='business-list'>
                     <Row>
@@ -290,10 +325,17 @@ const Bussiness = () => {
                                                 <div className={`${hideLightbox ? "hide-lightbox" : "ligthbox"}`}>
                                                     <Row className="justify-content-md-center">
                                                         <Col md="10" lg="6">
+                                                            <Row className='justify-content-center'>
+                                                                <Form.Label><h4>Update Info</h4></Form.Label>
+                                                            </ Row>
+                                                            <Row className="justify-content-center">
+                                                                <Col xs="6">
+                                                                    <Button variant="light" onClick={handleShow}>Change Picture</Button>
+                                                                </Col>
+                                                                <Col xs="2" />
+                                                            </Row>
+                                                            <br />
                                                             <Form>
-                                                                <Row className='justify-content-center'>
-                                                                    <Form.Label><h4>Update Info</h4></Form.Label>
-                                                                </Row>
                                                                 <Row className="justify-content-center">
                                                                     <Col xs="6">
                                                                         <Form.Control type='text'
@@ -354,6 +396,30 @@ const Bussiness = () => {
                     </Row>
                 </div>
             </Container>
+            <Modal className='settings-business' show={showModal} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Change Picture</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Row className="justify-content-md-center">
+                            <Col md="10 text-left">
+                                <Form.Label><h6>To Update:</h6></Form.Label>
+                                <Form.Control type="file" name="profile" value={updatePic.profile} onChange={onChangeUp} required={true} />
+                                <img src={img_profile} alt="" />
+                            </Col>
+                        </Row>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={saveNewPic}>
+                        Update
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Tab.Pane>
     )
 }

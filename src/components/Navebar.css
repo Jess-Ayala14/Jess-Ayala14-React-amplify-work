@@ -2,6 +2,13 @@ nav.Ali-navbar{
     z-index: 1;
 }
 
+nav.Ali-navbar .container a.navbar-brand img{
+    height: 57px;
+    width: auto;
+    margin-top: -9px;
+    margin-bottom: -9px;
+}
+
 .navbar-item {
     text-transform: capitalize;
 }

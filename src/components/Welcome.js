@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import './Welcome.css';
+import logo_site from '../storage/logo.png'
 
 
 class Welcome extends Component {
@@ -24,6 +25,8 @@ class Welcome extends Component {
             <Col xs={2} md={3} lg={4} />
             <Col xs={8} md={6} lg={4} className="center">
               <h3 className="title-welcome">Welcome to Ali-Media</h3>
+              <br />
+              <img src={logo_site} />
               <br />
               <Card className='card-welcome'>
                 <Card.Body className='center'>

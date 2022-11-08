@@ -109,110 +109,165 @@ const Home = () => {
             Storage.configure({ level: 'private' })
             const urlImg = await Storage.get('temp/' + newPostData.picture);
 
-            if (newPostData.fb_checkbox === true) {
+            async function fbPosting() {
+                if (extension === 'gif' || extension === 'jpeg' || extension === 'jpg' || extension === 'png') {
+                    console.log('picture')
 
-                function fbPosting() {
-                    if (extension === 'gif' || extension === 'jpeg' || extension === 'jpg' || extension === 'png') {
-                        console.log('picture')
+                    var params = {
+                        //Page Token with publish_pages (to post as Page)
+                        access_token: access_token,
+                        //status message
+                        message: newPostData.description,
+                        //absolute url to the image, must be public
+                        url: urlImg,
 
-                        var params = {
-                            //Page Token with publish_pages (to post as Page)
-                            access_token: access_token,
-                            //status message
-                            message: newPostData.description,
-                            //absolute url to the image, must be public
-                            url: urlImg,
+                    };
 
-                        };
+                    window.FB.api(
+                        "me?fields=id",
+                        "GET",
+                        {
+                            access_token: access_token
+                        },
+                        function (response) {
+                            // Insert your code here
+                            post_picture(response.id)
 
+                        }
+                    );
+
+                    function post_picture(page_id) {
                         window.FB.api(
-                            "me?fields=id",
-                            "GET",
-                            {
-                                access_token: access_token
-                            },
+                            page_id + '/photos?',
+                            'POST',
+                            params,
                             function (response) {
-                                // Insert your code here
-                                post_picture(response.id)
 
-                            }
-                        );
-
-                        function post_picture(page_id) {
-                            window.FB.api(
-                                page_id + '/photos?',
-                                'POST',
-                                params,
-                                function (response) {
-
-                                    console.log(urlImg, response)
-                                    if (!response.error) {
-                                        setTimeout(function () {
-                                            alert("FB: Publication was successful")
-                                            window.location.reload();
-                                        }, 7000)
-                                    }
-                                    else {
+                                console.log(urlImg, response)
+                                if (!response.error) {
+                                    setTimeout(function () {
                                         alert("FB: Publication was successful")
-                                    }
+                                    }, 7000)
                                 }
-                            );
-
-                        }
-                    }
-                    else if (extension === 'mp4' || extension === 'mkv') {
-                        console.log('video')
-                        var params = {
-                            //Page Token with publish_pages (to post as Page)
-                            access_token: access_token,
-                            //status message
-                            description: newPostData.description,
-                            //absolute url to the image, must be public
-                            file_url: urlImg,
-
-                        };
-
-                        window.FB.api(
-                            "me?fields=id",
-                            "GET",
-                            {
-                                access_token: access_token
-                            },
-                            function (response) {
-                                // Insert your code here
-                                post_video(response.id)
-
+                                else {
+                                    alert("FB: Publication was successful")
+                                }
                             }
                         );
 
-                        function post_video(page_id) {
-                            window.FB.api(
-                                page_id + '/videos?',
-                                'POST',
-                                params,
-                                function (response) {
-
-                                    console.log(urlImg, response)
-                                    if (!response.error) {
-                                        setTimeout(function () {
-                                            alert("FB: Publication was successful")
-                                            window.location.reload();
-                                        }, 7000)
-                                    }
-                                    else {
-                                        alert("FB Error: Publication was Unsuccesful")
-                                    }
-                                }
-                            );
-                        }
                     }
                 }
+                else if (extension === 'mp4' || extension === 'mkv') {
+                    console.log('video')
+                    var params = {
+                        //Page Token with publish_pages (to post as Page)
+                        access_token: access_token,
+                        //status message
+                        description: newPostData.description,
+                        //absolute url to the image, must be public
+                        file_url: urlImg,
 
-                fbPosting(urlImg);
+                    };
+
+                    window.FB.api(
+                        "me?fields=id",
+                        "GET",
+                        {
+                            access_token: access_token
+                        },
+                        function (response) {
+                            // Insert your code here
+                            post_video(response.id)
+
+                        }
+                    );
+
+                    function post_video(page_id) {
+                        window.FB.api(
+                            page_id + '/videos?',
+                            'POST',
+                            params,
+                            function (response) {
+
+                                console.log(urlImg, response)
+                                if (!response.error) {
+                                    setTimeout(function () {
+                                        alert("FB: Publication was successful")
+                                    }, 7000)
+                                }
+                                else {
+                                    alert("FB Error: Publication was Unsuccesful")
+                                }
+                            }
+                        );
+                    }
+                }
             }
 
+            async function instPosting(params) {
 
-            if (newPostData.inst_checkbox === true) {
+                window.FB.api(
+                    "me?fields=instagram_business_account{id}",
+                    "GET",
+                    {
+                        access_token: access_token
+                    },
+                    function (response) {
+                        // Insert your code here
+                        media(response["instagram_business_account"]["id"])
+
+                    }
+                );
+
+                function media(insta_id) {
+                    window.FB.api(
+                        insta_id + '/media',
+                        'POST',
+                        params,
+                        async function (response) {
+                            console.log(response)
+
+                            if (response['id'] !== '') {
+                                setTimeout(function () {
+                                    alert("Inst: Publication was successful")
+                                    media_publish(insta_id, response.id)
+                                }, 8000)
+
+
+                            }
+                            else {
+                                alert("Inst: ", toString(response))
+                            }
+                        }
+                    );
+                }
+
+                function media_publish(insta_id, id_media) {
+
+                    window.FB.api(
+                        insta_id + '/media_publish',
+                        'POST',
+                        {
+                            access_token: access_token
+                        },
+                        { "creation_id": id_media },
+                        function (response) {
+                            console.log("Media Posted:", response)
+                        }
+                    );
+
+                }
+            }
+
+            if (newPostData.fb_checkbox === true && newPostData.inst_checkbox == false) {
+
+                fbPosting().then(
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 10000)
+                );
+            }
+            else if (newPostData.fb_checkbox === false && newPostData.inst_checkbox === true) {
 
                 var params = ''
 
@@ -240,65 +295,47 @@ const Home = () => {
                         media_type: 'VIDEO'
                     };
                 }
-                function instPosting() {
 
-                    window.FB.api(
-                        "me?fields=instagram_business_account{id}",
-                        "GET",
-                        {
-                            access_token: access_token
-                        },
-                        function (response) {
-                            // Insert your code here
-                            media(response["instagram_business_account"]["id"])
-
-                        }
-                    );
-
-                    function media(insta_id) {
-                        window.FB.api(
-                            insta_id + '/media',
-                            'POST',
-                            params,
-                            async function (response) {
-                                console.log(response)
-
-                                if (response['id'] !== '') {
-                                    setTimeout(function () {
-                                        alert("Inst: Publication was successful")
-                                        media_publish(insta_id, response.id)
-
-                                    }, 10000)
-                                    
-
-                                }
-                                else {
-                                    alert("Inst: ", toString(response))
-                                }
-                            }
-                        );
-                    }
-
-                    function media_publish(insta_id, id_media) {
-
-                        window.FB.api(
-                            insta_id + '/media_publish',
-                            'POST',
-                            {
-                                access_token: access_token
-                            },
-                            { "creation_id": id_media },
-                            function (response) {
-                                console.log("Media Posted:", response)
-                                //window.location.reload();
-                            }
-                        );
-
-                    }
-                }
-                instPosting(urlImg)
+                instPosting(params).then(
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 12000)
+                )
             }
-            
+            else if (newPostData.fb_checkbox === true && newPostData.inst_checkbox === true) {
+                var params = ''
+
+                if (extension === 'gif' || extension === 'jpeg' || extension === 'jpg' || extension === 'png') {
+                    console.log('picture')
+                    params = {
+                        //Page Token with publish_pages (to post as Page)
+                        access_token: access_token,
+                        //status message
+                        caption: newPostData.description,
+                        //absolute url to the image, must be public
+                        image_url: urlImg,
+
+                    };
+                }
+                else if (extension === 'mp4' || extension === 'mkv') {
+                    console.log('video')
+                    params = {
+                        //Page Token with publish_pages (to post as Page)
+                        access_token: access_token,
+                        //status message
+                        caption: newPostData.description,
+                        //absolute url to the image, must be public
+                        video_url: urlImg,
+                        media_type: 'VIDEO'
+                    };
+                }
+
+                fbPosting().then(instPosting(params).then(
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 14000)
+                ))
+            }
         }
         else {
             alert("Check at least one option")
@@ -306,7 +343,6 @@ const Home = () => {
         }
 
     }
-
 
     /////////////////////////////////////////////SCRIPT SDK //////////////////////////////////////////////////
     const scriptFB = () => {
@@ -351,7 +387,6 @@ const Home = () => {
 
 
     }
-
 
     if (loginFB === true && access_token === '') {
         queryToken()
@@ -418,9 +453,9 @@ const Home = () => {
         setFormData1({ ...newPostData, "picture": e.target.value });
         const [file] = e.target.files;
         if (ImageTypes.includes(file["type"]))
-            setImg(URL.createObjectURL(file))
+            await setImg(URL.createObjectURL(file))
         else if (videoTypes.includes(file["type"]))
-            setVideo(URL.createObjectURL(file))
+            await setVideo(URL.createObjectURL(file))
 
         Storage.configure({ level: 'private' })
         await Storage.put("temp/" + e.target.files[0].name, file, {
@@ -444,7 +479,7 @@ const Home = () => {
                 <Container>
                     <div>
                         <br />
-                        <Row>
+                        <Row className='row-tab-md-lg'>
                             <Col xs={6} md={3} lg={2}>
                                 <Card>
                                     {business.map(business => (
@@ -458,20 +493,29 @@ const Home = () => {
                                     ))}
                                 </Card>
                             </Col>
-                            <Col xs={3} md={6} lg={7}>
-                                {loginFB === true
-
-                                    ? <p>Graph API FB Inside</p>
-                                    : <p>Graph API FB Outside</p>
-
-                                }
-
-                            </Col>
+                            <Col xs={3} md={6} lg={7} />
                             <Col xs={3} md={3} lg={3}>
                                 <Button variant="primary" onClick={handleShow} disabled={loginFB === true ? '' : true}>
                                     New Post
                                 </Button>
                             </Col>
+                        </Row>
+                        <Row className='row-tab-xs-xl'>
+                            <Col xs={6} md={3} lg={2}>
+                                <Card>
+                                    {business.map(business => (
+                                        <Card.Body>
+                                            <Card.Title>{business.name}</Card.Title>
+                                            <Card.Text>
+                                                <img className='profile_img' src={business.image} alt="profile" />
+                                            </Card.Text>
+                                            <Card.Subtitle className='text-left'>{business.about}</Card.Subtitle>
+                                        </Card.Body>
+                                    ))}
+                                </Card>
+                            </Col>
+                            <Col xs={3} md={6} lg={7} />
+                            <Col xs={3} md={3} lg={3} />
                         </Row>
                         <br />
                         <Row className='row-tab-md-lg'>
@@ -662,7 +706,9 @@ const Home = () => {
                                         <></>
                                     }
                                     {video_form ?
-                                        <video src={video_form} controls alt="" />
+                                        <video control muted>
+                                            <source src={video_form} />
+                                        </video>
                                         :
                                         <></>
                                     }

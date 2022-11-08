@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Tab, Nav, Row, Col, Card, Button } from 'react-bootstrap';
+import { async } from 'rxjs';
 import { createStore } from 'state-pool';
 
 const store = createStore();
@@ -70,10 +71,10 @@ export const Posted = (data) => {
         }
 
         function formatPostFB(posts) {
-            
+
             const content = Object.keys(posts).map(key => {
                 return (
-                    [posts[key].id, posts[key].message, posts[key].status_type, posts[key].full_picture, posts[key].attachments, posts[key].messages_tags]
+                    [posts[key].id, posts[key].message, posts[key].status_type, posts[key].full_picture, posts[key].attachments['data'][0]['media']['source'], posts[key].messages_tags]
                 );
             })
             return content
@@ -87,7 +88,7 @@ export const Posted = (data) => {
 
 
         function formatPostIns(media) {
-                
+
             const content = Object.keys(media).map(key => {
                 return (
                     [media[key].permalink, media[key].caption, media[key].media_url, media[key].media_type]
@@ -101,14 +102,14 @@ export const Posted = (data) => {
     }
 
 
-    function FBPost(props) {
+    const FBPost = (props) => {
 
         const FBposted = props.posted;
 
         const listItems = FBposted.map((post) =>
             <Row>
                 <Col xs={0} sm={1} md={2} lg={2} />
-                <Col xs={12} sm={10} md={10} lg={8}>
+                <Col xs={12} sm={10} md={8} lg={8}>
                     <br />
                     <Card>
                         <Card.Title className='text-left'><a href={'https://www.facebook.com/' + post[0]} target="_blank">Go to post</a></Card.Title>
@@ -117,9 +118,9 @@ export const Posted = (data) => {
                                 {post[1]}
                             </Card.Text>
                             <div className='text-center'>
-                                {post[2] == 'added_video' ?
-                                    <video controls muted>
-                                        <source src={post[4]['data'][0]['media']['source']}/>
+                                {post[2] === 'added_video' ?
+                                    <video controls poster={post[3]} muted>
+                                        <source src={post[4]} />
                                     </video>
                                     :
                                     <img src={post[3]} />
@@ -138,7 +139,7 @@ export const Posted = (data) => {
         );
     }
 
-    function InsPost(props) {
+    const InsPost = (props) => {
 
         const InsPosted = props.posted;
         const listItems = InsPosted.map((post) =>
@@ -153,7 +154,7 @@ export const Posted = (data) => {
                                 {post[1]}
                             </Card.Text>
                             <div className='text-center'>
-                                {post[3] == 'VIDEO' ?
+                                {post[3] === 'VIDEO' ?
                                     <video controls muted>
                                         <source src={post[2]} />
                                     </video>
