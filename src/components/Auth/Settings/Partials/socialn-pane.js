@@ -4,7 +4,7 @@ import { Container, Row, Col, Tab, Button, Modal }
     from 'react-bootstrap';
 import fb_ins_logo from '../../../../storage/fb-ins.png';
 import tw_logo from '../../../../storage/twitter.png';
-//import { Client } from "twitter-api-sdk";
+import { Client } from "twitter-api-sdk";
 
 
 const Socialn = () => {
@@ -17,7 +17,7 @@ const Socialn = () => {
     const handleClose = () => setShow(false);
     const handleClose1 = () => setShow1(false);
 
-    //  const client = new Client(process.env.BEARER_TOKEN);
+    const client = new Client(process.env.BEARER_TOKEN);
 
 
     const authHandler = (err, data) => {
@@ -108,16 +108,16 @@ const Socialn = () => {
 
     // Instantiate with desired auth type (here's Bearer v2 auth)
 
-    /*
+
     async function main() {
         const stream = client.tweets.sampleStream({
-          "tweet.fields": ["author_id"],
+            "tweet.fields": ["author_id"],
         });
         for await (const tweet of stream) {
-          console.log(tweet.data?.author_id);
+            console.log(tweet.data?.author_id);
         }
-      }
-*/
+    }
+
 
     return (
         <Tab.Pane eventKey="Social">
@@ -195,7 +195,7 @@ const Socialn = () => {
                     <Button variant="secondary" onClick={handleClose1}>
                         Close
                     </Button>
-                    <Button>
+                    <Button onClick={main}>
                         Login
                     </Button>
                 </Modal.Footer>
