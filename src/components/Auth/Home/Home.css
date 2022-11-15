@@ -61,7 +61,7 @@ div.Home .card-body .fade.tab-pane {
 @media only screen and (max-width: 820px) {
     div.Home img.profile_img,
     div.Business img.profile_img {
-        width: 95px;
+        width: 70px;
         height: auto;
     }
 }
@@ -160,7 +160,7 @@ div.Home .business_form .card-body form img {
 
 
 .Home-col-tab .socialM-content {
-    height: 60vh;
+    height: 80vh;
     background-color: #f6f8fa;
     border-radius: 5px;
     border-color: #85b2f5;
@@ -260,6 +260,15 @@ div.Home .business_form .card-body form img {
     margin-right: auto;
     max-height: auto;
     max-width: 250px;
+}
+
+.modal-content>.modal-post .modal-body label.danger.show{
+    color: #fe2222;
+    display: inline;
+}
+
+.modal-content>.modal-post .modal-body label.danger.hide{
+    display: none;
 }
 
 .modal-content>.modal-post .modal-body video {

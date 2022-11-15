@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { createElement, useEffect, useState } from 'react';
 import Files from './Partials/Files';
 import Posted from './Partials/Posted';
 import Drafts from './Partials/Drafts';
 import { Auth, API, Storage } from 'aws-amplify';
 import { AmplifyLoadingSpinner } from '@aws-amplify/ui-react';
-import { Container, Row, Col, Tab, Button, Modal, Nav, Form, Card, Pagination }
+import { Container, Row, Col, Tab, Button, Modal, Nav, Form, Card, Pagination, Label }
     from 'react-bootstrap';
 import './Home.css';
 import { listBusinesses } from '../../../graphql/queries';
@@ -33,6 +33,9 @@ const Home = () => {
     const [img_form, setImg] = useState();
     const [video_form, setVideo] = useState();
     const [img_profile, setImg_profile] = useState();
+    const [eImgActive, seteImgActive] = useState(false);
+    const [eVideoActive, seteVideoActive] = useState(false);
+    const [eFileActive, setefileActive] = useState(false);
 
     useEffect(() => {
         fetchBusiness();
@@ -61,11 +64,12 @@ const Home = () => {
     function queryToken() {
 
         window.FB.api(
-            "me?fields=accounts{access_token}",
+            "me?fields=accounts{access_token,name}",
             "GET",
 
             function (response) {
                 // Insert your code here
+                console.log(response)
                 response = response["accounts"]['data'][0]['access_token']
 
                 getToken(response)
@@ -75,13 +79,15 @@ const Home = () => {
     }
 
     function getToken(token) {
-
         savingtoken(token)
         console.log(access_token)
     }
 
     const handleClose = () => {
         setShow(false);
+        seteImgActive(false);
+        seteVideoActive(false);
+        setefileActive(false);
         newPostData.description = '';
         newPostData.picture = '';
         newPostData.fb_checkbox = '';
@@ -449,18 +455,47 @@ const Home = () => {
     async function onImageChange(e) {
         const ImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
         const videoTypes = ['video/mp4', 'video/mkv'];
+
+
         if (!e.target.files[0].name) return
         setFormData1({ ...newPostData, "picture": e.target.value });
         const [file] = e.target.files;
-        if (ImageTypes.includes(file["type"]))
-            await setImg(URL.createObjectURL(file))
-        else if (videoTypes.includes(file["type"]))
-            await setVideo(URL.createObjectURL(file))
+        if (ImageTypes.includes(file["type"])) {
+            if (e.target.files[0].size < (8 * 1048576)) {
+                setImg(URL.createObjectURL(file))
+                seteImgActive(false)
+                setefileActive(false)
+            }
+            else {
+                console.log("invalid File 1")
+                seteImgActive(true)
+            }
+        }
+        else if (videoTypes.includes(file["type"])){
 
-        Storage.configure({ level: 'private' })
-        await Storage.put("temp/" + e.target.files[0].name, file, {
-            contentType: "image/jpeg" || "image/png" || "video/mp4" || "video/mkv",
-        });
+            if (e.target.files[0].size < (88 * 1048576)) {
+                setVideo(URL.createObjectURL(file))
+                seteVideoActive(false)
+                setefileActive(false)
+            }
+            else {
+                console.log("invalid File 2")
+                seteVideoActive(true)
+            }
+        }
+        else {
+            console.log("File no Valid")
+            setefileActive(true)
+        }
+        console.log(e.target.files[0].size)
+
+
+        /*
+                Storage.configure({ level: 'private' })
+                await Storage.put("temp/" + e.target.files[0].name, file, {
+                    contentType: "image/jpeg" || "image/png" || "video/mp4" || "video/mkv",
+                });
+                */
 
     }
 
@@ -480,47 +515,20 @@ const Home = () => {
                     <div>
                         <br />
                         <Row className='row-tab-md-lg'>
-                            <Col xs={6} md={3} lg={2}>
-                                <Card>
-                                    {business.map(business => (
-                                        <Card.Body>
-                                            <Card.Title>{business.name}</Card.Title>
-                                            <Card.Text>
-                                                <img className='profile_img' src={business.image} alt="profile" />
-                                            </Card.Text>
-                                            <Card.Subtitle className='text-left'>{business.about}</Card.Subtitle>
-                                        </Card.Body>
-                                    ))}
-                                </Card>
-                            </Col>
-                            <Col xs={3} md={6} lg={7} />
-                            <Col xs={3} md={3} lg={3}>
-                                <Button variant="primary" onClick={handleShow} disabled={loginFB === true ? '' : true}>
-                                    New Post
-                                </Button>
-                            </Col>
-                        </Row>
-                        <Row className='row-tab-xs-xl'>
-                            <Col xs={6} md={3} lg={2}>
-                                <Card>
-                                    {business.map(business => (
-                                        <Card.Body>
-                                            <Card.Title>{business.name}</Card.Title>
-                                            <Card.Text>
-                                                <img className='profile_img' src={business.image} alt="profile" />
-                                            </Card.Text>
-                                            <Card.Subtitle className='text-left'>{business.about}</Card.Subtitle>
-                                        </Card.Body>
-                                    ))}
-                                </Card>
-                            </Col>
-                            <Col xs={3} md={6} lg={7} />
-                            <Col xs={3} md={3} lg={3} />
-                        </Row>
-                        <br />
-                        <Row className='row-tab-md-lg'>
                             <Tab.Container id="left-tabs-example" defaultActiveKey="posted">
-                                <Col className='hide' md={3} lg={2}>
+                                <Col xs={6} md={3} lg={2}>
+                                    <Card>
+                                        {business.map(business => (
+                                            <Card.Body>
+                                                <Card.Title>{business.name}</Card.Title>
+                                                <Card.Text>
+                                                    <img className='profile_img' src={business.image} alt="profile" />
+                                                </Card.Text>
+                                                <Card.Subtitle className='text-left'>{business.about}</Card.Subtitle>
+                                            </Card.Body>
+                                        ))}
+                                    </Card>
+                                    <br />
                                     <Nav variant="pills" className="flex-column">
                                         <Nav.Item>
                                             <Nav.Link eventKey="posted">Posted</Nav.Link>
@@ -534,15 +542,44 @@ const Home = () => {
                                     </Nav>
                                 </Col>
                                 <Col className="Home-col-tab" xs={0} sm={9} md={9} lg={8}>
+                                    <Row>
+                                        <Col xs={9} lg={10} />
+                                        <Col xs={3} lg={2}>
+                                            <Button variant="primary" onClick={handleShow} disabled={loginFB === true ? false : false}>
+                                                New Post
+                                            </Button>
+                                        </Col>
+                                    </Row>
                                     <Tab.Content>
                                         <Posted dataFromParent={[loginFB, access_token]} />
                                         <Files dataFromParent={loginFB} />
                                         <Drafts dataFromParent={loginFB} />
                                     </Tab.Content>
                                 </Col>
+                                <br />
+                                <Col className='hide' md={3} lg={2}>
+                                </Col>
                             </Tab.Container>
                         </Row>
                         <div className='row-tab-xs-xl'>
+                            <Row>
+                                <Col xs={6} md={3} lg={2}>
+                                    <Card>
+                                        {business.map(business => (
+                                            <Card.Body>
+                                                <Card.Title>{business.name}</Card.Title>
+                                                <Card.Text>
+                                                    <img className='profile_img' src={business.image} alt="profile" />
+                                                </Card.Text>
+                                                <Card.Subtitle className='text-left'>{business.about}</Card.Subtitle>
+                                            </Card.Body>
+                                        ))}
+                                    </Card>
+                                </Col>
+                                <Col xs={3} md={6} lg={7} />
+                                <Col xs={3} md={3} lg={3} />
+                            </Row>
+                            <br />
                             <Tab.Container defaultActiveKey="posted">
                                 <Row className='responsive'>
                                     <Nav variant="tabs">
@@ -575,8 +612,6 @@ const Home = () => {
                                 </Row>
                             </Tab.Container>
                         </div>
-
-
                     </div>
                 </Container>
                 :
@@ -706,12 +741,15 @@ const Home = () => {
                                         <></>
                                     }
                                     {video_form ?
-                                        <video control muted>
+                                        <video controls muted>
                                             <source src={video_form} />
                                         </video>
                                         :
                                         <></>
                                     }
+                                    <Form.Label className={eImgActive ? "danger show" : "danger hide"}> Is not allowed Image size &gt; 8 MB</Form.Label>
+                                    <Form.Label className={eVideoActive ? "danger show" : "danger hide"}>Is not allowed Video size &gt; 8 GB</Form.Label>
+                                    <Form.Label className={eFileActive ? "danger show" : "danger hide"}> Only jpg, PNG and MP4 are allowed</Form.Label>
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                                     <Form.Label>Enter a Description</Form.Label>
@@ -725,16 +763,14 @@ const Home = () => {
                         <Button variant="secondary" onClick={handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" onClick={new_post}>
+                        <Button variant="primary" disabled={eVideoActive || eImgActive || eFileActive ? true : false} onClick={new_post}>
                             Post
                         </Button>
                     </Modal.Footer>
                 </div>
             </Modal>
         </div >
-
     )
-
 }
 
 export default Home

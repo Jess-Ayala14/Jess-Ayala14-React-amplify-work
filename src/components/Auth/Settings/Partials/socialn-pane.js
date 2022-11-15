@@ -16,6 +16,8 @@ const Socialn = () => {
     const handleShow1 = () => setShow1(true);
     const handleClose = () => setShow(false);
     const handleClose1 = () => setShow1(false);
+    const CONSUMER_KEY = 'VrMi173miqclmI3A6CS8fmOrG'
+    const CONSUMER_SECRET = 'Tv1Rm8PdtlTaNORw9uzRdtRyk9tkQY0c2MjOO4aKMPBsTtLfoK'
 
     const client = new Client(process.env.BEARER_TOKEN);
 
@@ -108,15 +110,14 @@ const Socialn = () => {
 
     // Instantiate with desired auth type (here's Bearer v2 auth)
 
-
     async function main() {
         const stream = client.tweets.sampleStream({
-            "tweet.fields": ["author_id"],
+          "tweet.fields": ["author_id"],
         });
         for await (const tweet of stream) {
-            console.log(tweet.data?.author_id);
+          console.log(tweet.data?.author_id);
         }
-    }
+      }
 
 
     return (

@@ -15,7 +15,7 @@ export const Posted = (data) => {
     const [FBposted, setpostedFB] = store.useState("FBposted");
     const [InsPosted, setpostedIns] = store.useState("InsPosted");
     const APICALLFB = "me?fields=posts{id,message,status_type,messages_tags,full_picture,attachments{media},created_time,shares,reactions}";
-    const APICALLIns = "me?fields=instagram_business_account{media{permalink,media_type,caption,media_url,children{id,media_url}}}"
+    const APICALLIns = "me?fields=instagram_business_account{media{permalink,media_type,caption,thumbnail_url,media_url,children{id,media_url}}}"
 
     // me?fields=instagram_business_account{media{id,media_type,caption,media_url}}  
     //me?fields=instagram_business_account{id,username,biography}
@@ -42,8 +42,9 @@ export const Posted = (data) => {
             function (response) {
                 // Insert your code here
                 getPostFB(response);
+                //console.log(response)
 
-                setpostedFB(formatPostFB(getPostFB(response)))
+                console.log(setpostedFB(formatPostFB(getPostFB(response))))
 
             }
 
@@ -57,7 +58,7 @@ export const Posted = (data) => {
             },
             function (response) {
                 // Insert your code here
-                getPostIns(response);
+                console.log(response)
                 setpostedIns(formatPostIns(getPostIns(response)))
 
             }
@@ -74,7 +75,7 @@ export const Posted = (data) => {
 
             const content = Object.keys(posts).map(key => {
                 return (
-                    [posts[key].id, posts[key].message, posts[key].status_type, posts[key].full_picture, posts[key].attachments['data'][0]['media']['source'], posts[key].messages_tags]
+                    [posts[key].id, posts[key].message, posts[key].status_type, posts[key].full_picture, posts[key].attachments, posts[key].messages_tags]
                 );
             })
             return content
@@ -91,7 +92,7 @@ export const Posted = (data) => {
 
             const content = Object.keys(media).map(key => {
                 return (
-                    [media[key].permalink, media[key].caption, media[key].media_url, media[key].media_type]
+                    [media[key].permalink, media[key].caption, media[key].thumbnail_url, media[key].media_url, media[key].media_type]
                 );
             })
             return content
@@ -120,7 +121,7 @@ export const Posted = (data) => {
                             <div className='text-center'>
                                 {post[2] === 'added_video' ?
                                     <video controls poster={post[3]} muted>
-                                        <source src={post[4]} />
+                                        <source src={post[4]['data'][0]['media']['source']} />
                                     </video>
                                     :
                                     <img src={post[3]} />
@@ -154,12 +155,12 @@ export const Posted = (data) => {
                                 {post[1]}
                             </Card.Text>
                             <div className='text-center'>
-                                {post[3] === 'VIDEO' ?
-                                    <video controls muted>
-                                        <source src={post[2]} />
+                                {post[4] === 'VIDEO' ?
+                                    <video controls muted poster={post[2]}>
+                                        <source src={post[3]} />
                                     </video>
                                     :
-                                    <img src={post[2]} />
+                                    <img src={post[3]} />
                                 }
 
                             </div>

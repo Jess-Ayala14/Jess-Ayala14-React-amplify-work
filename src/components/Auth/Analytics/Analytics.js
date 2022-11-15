@@ -115,17 +115,6 @@ const Analytics = () => {
         <div className='Analytics'>
             <Container>
                 <br />
-                <Row>
-                    <Col xs={6} md={4} lg={4} >
-                        {loginFB === true ?
-                            <p>FACEBOOK Connected</p>
-                            :
-                            <p>Out from FACEBOOK</p>
-                        }
-                    </Col>
-                    <Col xs={3} md={8} lg={8} />
-                </Row>
-                <br />
                 <Row className='Insights'>
                     <Tab.Container defaultActiveKey="facebook-insight">
                         <Nav variant="pills" defaultActiveKey="facebook-insight">

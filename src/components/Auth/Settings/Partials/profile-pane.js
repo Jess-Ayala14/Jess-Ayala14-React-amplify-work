@@ -38,17 +38,20 @@ const Profile = () => {
 
     async function handleProfileSubmit(event) {
 
-        event.preventDefault();
-        let user = await Auth.currentAuthenticatedUser();
-
-        let result = await Auth.updateUserAttributes(user, {
-            'given_name': formData.name,
-            'family_name': formData.lastname
-        });
-
-        console.log(result);
-        window.location.reload();
-
+        if (!formData.name || !formData.lastname) {
+            alert("Not validated: blank fields")
+            return;
+        }
+        else {
+            event.preventDefault();
+            let user = await Auth.currentAuthenticatedUser();
+            let result = await Auth.updateUserAttributes(user, {
+                'given_name': formData.name,
+                'family_name': formData.lastname
+            });
+            console.log(result);
+            window.location.reload();
+        }
     }
 
     async function handleChangePass(event) {
@@ -112,17 +115,17 @@ const Profile = () => {
                                             <Form.Label><h5>Edit Name</h5></Form.Label>
                                             <Form.Control type="text" value={formData.name} name="name" id="name"
                                                 placeholder={(JSON.stringify(state["attributes"]["family_name"])) ?
-                                                    "current: " + format(JSON.stringify(state["attributes"]["given_name"]))
+                                                    "current: " + format(JSON.stringify(state["attributes"]["given_name"])) +" *"
                                                     :
-                                                    "Undefined"}
+                                                    "Undefined *"}
                                                 onChange={e => setFormData({ ...formData, 'name': e.target.value })}
                                             />
                                             <br />
                                             <Form.Control type="text" value={formData.lastname} name="lastname" id="lastname"
                                                 placeholder={(JSON.stringify(state["attributes"]["given_name"])) ?
-                                                    "current: " + format(JSON.stringify(state["attributes"]["family_name"]))
+                                                    "current: " + format(JSON.stringify(state["attributes"]["family_name"]))+" *"
                                                     :
-                                                    "Undefined"}
+                                                    "Undefined *"}
                                                 onChange={e => setFormData({ ...formData, 'lastname': e.target.value })}
                                             />
                                             <br />
