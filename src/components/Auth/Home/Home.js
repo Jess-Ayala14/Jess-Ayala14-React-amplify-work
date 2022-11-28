@@ -110,7 +110,7 @@ const Home = () => {
             const new_split = newPostData.picture.split(".");
             const extension = new_split[1];
 
-            console.log(newPostData.picture, ' ', extension)
+            //console.log(newPostData.picture, ' ', extension)
 
             Storage.configure({ level: 'private' })
             const urlImg = await Storage.get('temp/' + newPostData.picture);
@@ -453,9 +453,9 @@ const Home = () => {
 
     //e => setFormData1({ ...newPostData, 'description': e.target.value })}
     async function onImageChange(e) {
+
         const ImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
         const videoTypes = ['video/mp4', 'video/mkv'];
-
 
         if (!e.target.files[0].name) return
         setFormData1({ ...newPostData, "picture": e.target.value });
@@ -471,7 +471,7 @@ const Home = () => {
                 seteImgActive(true)
             }
         }
-        else if (videoTypes.includes(file["type"])){
+        else if (videoTypes.includes(file["type"])) {
 
             if (e.target.files[0].size < (88 * 1048576)) {
                 setVideo(URL.createObjectURL(file))
@@ -489,13 +489,11 @@ const Home = () => {
         }
         console.log(e.target.files[0].size)
 
+        Storage.configure({ level: 'private' })
+        await Storage.put("temp/" + e.target.files[0].name, file, {
+            contentType: "image/jpeg" || "image/png" || "video/mp4" || "video/mkv",
+        });
 
-        /*
-                Storage.configure({ level: 'private' })
-                await Storage.put("temp/" + e.target.files[0].name, file, {
-                    contentType: "image/jpeg" || "image/png" || "video/mp4" || "video/mkv",
-                });
-                */
 
     }
 
@@ -576,8 +574,12 @@ const Home = () => {
                                         ))}
                                     </Card>
                                 </Col>
-                                <Col xs={3} md={6} lg={7} />
-                                <Col xs={3} md={3} lg={3} />
+                                <Col xs={4} md={6} lg={7}>
+                                    <Button variant="primary" onClick={handleShow} disabled={loginFB === true ? false : false}>
+                                        New Post
+                                    </Button>
+                                </Col>
+                                <Col xs={2} md={3} lg={3} />
                             </Row>
                             <br />
                             <Tab.Container defaultActiveKey="posted">
@@ -602,13 +604,15 @@ const Home = () => {
                                     </Nav>
                                 </Row>
                                 <Row className='responsive-content'>
-                                    <Col className="Home-col-tab" xs={12} sm={12} md={9} lg={8}>
+                                    <Col xs={0} sm={1} />
+                                    <Col className="Home-col-tab" xs={12} sm={10} md={10} lg={8}>
                                         <Tab.Content>
                                             <Posted dataFromParent={[loginFB, access_token]} />
                                             <Files dataFromParent={loginFB} />
                                             <Drafts dataFromParent={loginFB} />
                                         </Tab.Content>
                                     </Col>
+                                    <Col xs={0} sm={1}/>
                                 </Row>
                             </Tab.Container>
                         </div>
@@ -706,7 +710,7 @@ const Home = () => {
             <Modal show={show} onHide={handleClose}>
                 <div className='modal-post'>
                     <Modal.Header closeButton>
-                        <Modal.Title>New Post</Modal.Title>
+                        <Modal.Title>Post Something</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Container>
