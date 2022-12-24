@@ -7,9 +7,11 @@ import tw_logo from '../../../../storage/twitter.png';
 import { Client } from "twitter-api-sdk";
 
 
-const Socialn = () => {
+const Socialn = (props) => {
 
-    const [loginFB, setloginFB] = useState(false);
+    const loginFB = props.data[0];
+    const logoutFB = props.data[1];
+    const onLoginFB = props.data[2];
     const [show, setShow] = useState(false);
     const [show1, setShow1] = useState(false);
     const handleShow = () => setShow(true);
@@ -26,99 +28,16 @@ const Socialn = () => {
         console.log(err, data);
     };
 
-
-    //const [isLoggedin, setIsLoggedin] = useState(false);
-
-    useEffect(() => {
-
-        scriptFB();
-
-        //checkLoginStateFB();
-
-    }, [loginFB]);
-
-    //////////////////////////////////API FACEBOOK////////////////////////////////////////////////////
-    const onLoginFB = () => {
-        window.FB.login(function (response) {
-            setloginFB(true);
-            window.location.reload();
-        },
-            {
-                scope: "email, read_insights, pages_show_list, ads_management, business_management, instagram_basic, instagram_manage_insights, instagram_content_publish, pages_read_engagement, pages_manage_metadata, pages_read_user_content, pages_manage_posts, public_profile"
-            }
-        );
-
-    };
-
-    async function checkLoginStateFB() {
-        window.FB.getLoginStatus(function (response) {
-            statusChangeCallbackFB(response);
-        });
-
-    }
-
-    const statusChangeCallbackFB = (response) => {
-        if (response.status === 'connected') {
-            console.log('Logged in and authenticated');
-            setloginFB(true);
-
-            // testAPI();
-        } else {
-            console.log('Not authenticated');
-            setloginFB(false);
-
-        }
-
-    }
-
-    const logoutFB = () => {
-        window.FB.logout(function (response) {
-            setloginFB(false);
-            window.location.reload();
-        });
-
-    }
-
-    /////////////////////////////////////////////SCRIPT SDK //////////////////////////////////////////////////
-    async function scriptFB() {
-        window.fbAsyncInit = function () {
-            window.FB.init({
-                appId: "801174264382809",
-                cookie: true,
-                xfbml: true,
-                version: 'v15.0'
-            });
-
-            window.FB.getLoginStatus(function (response) {
-                statusChangeCallbackFB(response);
-            });
-        };
-
-        // load facebook sdk script
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) { return; }
-            js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v14.0&appId=801174264382809&autoLogAppEvents=1";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-
-
-    }
-    scriptFB()
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     // Instantiate with desired auth type (here's Bearer v2 auth)
 
     async function main() {
         const stream = client.tweets.sampleStream({
-          "tweet.fields": ["author_id"],
+            "tweet.fields": ["author_id"],
         });
         for await (const tweet of stream) {
-          console.log(tweet.data?.author_id);
+            console.log(tweet.data?.author_id);
         }
-      }
-
+    }
 
     return (
         <Tab.Pane eventKey="Social">

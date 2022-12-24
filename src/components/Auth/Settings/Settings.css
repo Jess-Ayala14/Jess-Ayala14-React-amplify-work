@@ -57,9 +57,19 @@ div.settings {
 }
 
 /*Modal update Picture */
+
 .settings-business.modal .modal-content .modal-body img {
     height: 120px;
     width: auto;
+}
+
+.settings-business.modal .modal-content .modal-body img.afterChange {
+    height: 70px;
+    width: auto;
+}
+
+.settings-business.modal .modal-content .modal-body img.hide{
+    display: none;
 }
 /*                         */
 
@@ -113,7 +123,7 @@ div.settings {
     z-index: -1;
 }
 
-/*////////////////////////////////////////////////////////////////////////////*/
+/*///////////////////////////////////Business Tab///////////////////////////////////////////////*/
 
 .settings .settings-col-tab .settings-content .profile-list,
 .socialn-list,
@@ -131,9 +141,12 @@ div.settings {
     text-align: center;
 }
 
+/*//////////////////////////////////Profile Tab////////////////////////////////////////////////////////*/
 .settings .settings-col-tab .settings-content .profile-list input {
     text-transform: capitalize;
 }
+
+/*//////////////////////////////////Social Tab/////////////////////////////////////////////////////////*/
 
 .settings .settings-col-tab .settings-content .socialn-list button.show-button {
     display: inline;

@@ -14,10 +14,10 @@ import { async } from 'rxjs';
 const initialFormState = { name: '', about: '', image: '', phone: '' }
 const updateFormState = { profile: '' }
 
-const Bussiness = () => {
+const Bussiness = (props) => {
 
+    const loginFB = props.data;
     const [updatePic, setUpdate] = useState(updateFormState);
-    const [loginFB, setlogin] = useState(false);
     const [formData, setFormData] = useState(initialFormState);
     const [hideLightbox, setHideLightbox] = useState(true);
     const [business, setBusiness] = useState([]);
@@ -40,53 +40,7 @@ const Bussiness = () => {
                 setState(null)
             }
         })()
-    }, [loginFB]);
-
-    function scriptFB() {
-        window.fbAsyncInit = function () {
-            window.FB.init({
-                appId: "801174264382809",
-                cookie: true,
-                xfbml: true,
-                version: 'v15.0'
-            });
-
-            window.FB.getLoginStatus(function (response) {
-                statusChangeCallback(response);
-            });
-        };
-
-        function statusChangeCallback(response) {
-            console.log(response)
-            if (response.status === 'connected') {
-                console.log('Logged in and authenticated');
-                setlogin(true);
-
-                // testAPI();
-            } else {
-                console.log('Not authenticated');
-                setlogin(false);
-
-            }
-        }
-
-        function checkLoginState() {
-            window.FB.getLoginStatus(function (response) {
-                statusChangeCallback(response);
-            });
-
-        }
-
-        // load facebook sdk script
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) { return; }
-            js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v14.0&appId=801174264382809&autoLogAppEvents=1";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-
-    }
+    }, []);
 
     async function fetchBusiness() {
         const apiData = await API.graphql({ query: listBusinesses });
@@ -94,7 +48,7 @@ const Bussiness = () => {
         await Promise.all(BusinessFromAPI.map(async business => {
             if (business.image) {
                 Storage.configure({ level: 'private' })
-                const image = await Storage.get('Profile/' + business.image);
+                const image = await Storage.get('Profile/Pic_Profile');
                 business.image = image;
             }
             return business;
@@ -216,11 +170,11 @@ const Bussiness = () => {
 
     async function onChange(e) {
         if (!e.target.files[0].name) return
-        setFormData({ ...formData, "image": e.target.files[0].name });
+        //setFormData({ ...formData, "image": e.target.files[0].name });
         const [file] = e.target.files;
         setImg_profile(URL.createObjectURL(file));
         Storage.configure({ level: 'private' })
-        await Storage.put("Profile/" + e.target.files[0].name, file,
+        await Storage.put("Profile/Pic_Profile", file,
             {
                 contentType: "image/png"
             });
@@ -230,28 +184,22 @@ const Bussiness = () => {
 
     async function onChangeUp(e) {
         if (!e.target.files[0].name) return
-        setUpdate({ ...updatePic, "profile": e.target.files[0].name });
+        setUpdate({ ...updatePic, "profile": e.target.files });
         const [file] = e.target.files;
         setImg_profile(URL.createObjectURL(file));
-
-        fetchBusiness();
     }
 
     async function saveNewPic() {
         console.log(updatePic.profile)
         if (!updatePic.profile) return;
-
-
-        //const [file] = e.target.files;
-
+        const [file] = updatePic.profile
         console.log("Inside")
-        /*
         Storage.configure({ level: 'private' })
-        await Storage.put("Profile/" + e.target.files[0].name, file,
+        await Storage.put("Profile/Pic_Profile", file,
             {
                 contentType: "image/png"
-            });*/
-
+            })
+        window.location.reload()
     }
 
     const handleClose = () => {
@@ -261,7 +209,6 @@ const Bussiness = () => {
     }
 
     let [state, setState] = useState(null)
-
 
     if (!state) return <AmplifyLoadingSpinner />
 
@@ -317,7 +264,7 @@ const Bussiness = () => {
                                                         <Card.Link className='text-right' ><a href='#bussiness' onClick={() => setHideLightbox(false)}>Edit</a></Card.Link>
                                                     </Col>
                                                     <Col md="3">
-                                                        <Button variant='primary' onClick={sync_fb} >
+                                                        <Button variant='primary' onClick={sync_fb} disabled={loginFB === true ? '' : 'true'} >
                                                             Sync FB
                                                         </Button>
                                                     </Col>
@@ -403,10 +350,18 @@ const Bussiness = () => {
                 <Modal.Body>
                     <Form>
                         <Row className="justify-content-md-center">
-                            <Col md="10 text-left">
-                                <Form.Label><h6>To Update:</h6></Form.Label>
-                                <Form.Control type="file" name="profile" value={updatePic.profile} onChange={onChangeUp} required={true} />
-                                <img src={img_profile} alt="" />
+                            <Col md="10">
+                                <Row className="justify-content-md-center">
+                                    {business.map(business => (
+                                        business.image && <img className="afterChange" src={business.image} />
+                                    ))}
+                                </Row>
+                                <Form.Label className="text-left"><h6>To Update:</h6></Form.Label>
+                                <Form.Control className="text-left" type="file" name="profile" onChange={onChangeUp} required={true} />
+                                <br />
+                                <Row className="justify-content-md-center">
+                                    <img className={img_profile ? "text-center" : "hide"} src={img_profile} alt="" />
+                                </Row>
                             </Col>
                         </Row>
                     </Form>

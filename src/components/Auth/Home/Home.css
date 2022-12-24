@@ -279,3 +279,29 @@ div.Home .business_form .card-body form img {
     max-height: auto;
     max-width: 250px;
 }
+
+.posts.offcanvas .offcanvas-header{
+    background-color: #0d6efd;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.posts.offcanvas .instagram.offcanvas-header{
+    background-color: #e86aed;
+}
+
+.posts.offcanvas .offcanvas-header .offcanvas-title a{
+    color: white;
+    text-decoration: none;
+}
+
+
+.posts.offcanvas .offcanvas-body p{
+    text-align: justify;
+}
+
+.posts.offcanvas .offcanvas-body .offcanvas-img{
+    /*text-align: center;*/
+    height: auto;
+    width: 300px 
+}
