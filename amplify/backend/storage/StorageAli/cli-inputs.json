@@ -1,7 +1,7 @@
 {
-  "resourceName": "s303a4ba8f",
-  "policyUUID": "03a4ba8f",
-  "bucketName": "alimediatoolsoct",
+  "resourceName": "StorageAli",
+  "policyUUID": "38e71bdb",
+  "bucketName": "bootstrapreactworkfeb04",
   "storageAccess": "auth",
   "guestAccess": [],
   "authAccess": [
@@ -9,6 +9,6 @@
     "READ",
     "DELETE"
   ],
-  "triggerFunction": "S3Trigger6218625d",
+  "triggerFunction": "NONE",
   "groupAccess": {}
 }
